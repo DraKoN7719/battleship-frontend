@@ -1,0 +1,34 @@
+.square{
+    background-color: Transparent;
+    width: 30px;
+    height: 30px;
+    border: 1px solid;
+}
+
+.square2{
+    width: 30px;
+    height: 30px;
+    display: inline;
+}
+
+.shipSquare{
+    background-color: greenyellow;
+    width: 30px;
+    height: 30px;
+    border: 1px solid;
+}
+.square:hover{
+    background-color: whitesmoke;
+}
+
+.line{
+    display: inline-block;
+    height: 30px;
+}
+
+.pole{
+    display: flex;
+    flex-direction: column;
+    padding-top: 15%;
+    padding-left: 30%;
+}

@@ -1,0 +1,42 @@
+.logo{
+    width : 20%;
+
+}
+.main{
+    display: flex;
+    flex-direction: column;
+    padding-left: 75%;
+    padding-top: 6%;
+    padding-right: 10%;
+    align-items: center;
+    font-family: "Segoe UI", sans-serif;
+    cursor: default;
+
+}
+
+.Nick{
+    font-weight: bold;
+    font-size: 120%;
+}
+
+.exitB{
+    background-color: Transparent;
+
+    border: 1px solid;
+    margin-top: 10px;
+    min-width: 40%;
+    letter-spacing: 0px;
+    -webkit-transition: all 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750);
+    -moz-transition: all 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750);
+    -o-transition: all 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750);
+    transition: all 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750); /* linear */
+}
+
+.exitB:hover{
+    font-weight: bold;
+    letter-spacing: 1px;
+    -webkit-transition: all 100ms cubic-bezier(0.250, 0.250, 0.750, 0.750);
+    -moz-transition: all 100ms cubic-bezier(0.250, 0.250, 0.750, 0.750);
+    -o-transition: all 100ms cubic-bezier(0.250, 0.250, 0.750, 0.750);
+    transition: all 100ms cubic-bezier(0.250, 0.250, 0.750, 0.750); /* linear */
+}
