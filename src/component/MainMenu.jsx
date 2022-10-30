@@ -1,8 +1,8 @@
 import React from 'react';
 
 import {Link} from 'react-router-dom'
-import LoginMenu from "./LoginMenu";
-import classes from '../styles/MainMenu.css'
+import LoginMenu from "../authentication/LoginMenu";
+import classes from '../style/MainMenu.css'
 
 
 
