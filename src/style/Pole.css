@@ -1,20 +1,37 @@
+.container{
+    display: flex;
+    justify-content: space-evenly;
+    padding-top: 10%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+
+
+
+}
+
 .square{
     background-color: Transparent;
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 45px;
     border: 1px solid;
+
 }
 
 .square2{
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 45px;
     display: inline;
+
 }
 
 .shipSquare{
     background-color: greenyellow;
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 45px;
     border: 1px solid;
 }
 .square:hover{
@@ -22,13 +39,36 @@
 }
 
 .line{
-    display: inline-block;
-    height: 30px;
+
+    width: 450px;
+    height: 45px;
 }
 
 .pole{
     display: flex;
     flex-direction: column;
-    padding-top: 15%;
-    padding-left: 30%;
+}
+
+.leftLine {
+    display: flex;
+}
+
+.topLine {
+    margin-left: 45px;
+    display: flex;
+    flex-direction: row;
+}
+
+
+.ship4{
+
+}
+.ship3{
+
+}
+.ship2{
+
+}
+.ship1{
+
 }

@@ -14,13 +14,10 @@ const Square = function (props) {
     }
 
     return (
-        <div className={'square2'}>
-            {isShip
-                ?
-                <button className={'shipSquare'} onClick={getCords}/>
-                :
-                <button className={'square'} onClick={getCords}/>
-            }
+        <div onMouseEnter={() => props.setSelectedSquare({x: props.cord.x, y: props.cord.y})}
+             onMouseLeave={() => props.setSelectedSquare(undefined)}
+             className={props.style}>
+            <button className={ isShip ?'shipSquare' :'square'} onClick={getCords}/>
         </div>
     )
 }
