@@ -2,19 +2,27 @@ import React from 'react';
 import classes from '../style/Pole.css'
 import Line from "./Line";
 
-const Pole = function () {
+const Pole = function ({numbers, letters, setSelectedSquare}) {
+    let y = 0;
     return (
-        <div className={'pole'}>
-            <Line y ={1} />
-            <Line y ={2}/>
-            <Line y ={3}/>
-            <Line y ={4}/>
-            <Line y ={5}/>
-            <Line y ={6}/>
-            <Line y ={7}/>
-            <Line y ={8}/>
-            <Line y ={9}/>
-            <Line y ={10}/>
+        <div>
+            <div className="topLine">
+                {letters.map(letter =>
+                    <div style={{justifyContent: 'center', width: '45px', height: '45px', fontSize: '24px', lineHeight: '45px', display: 'flex'}}>
+                        {letter}
+                    </div>
+                )}
+            </div>
+            <div className={'pole'}>
+                {numbers.map(number =>
+                    <div   className="leftLine">
+                        <div style={{justifyContent: 'center', width: '45px', height: '45px', fontSize: '24px', lineHeight: '45px', display: 'flex'}}>
+                            {number}
+                        </div>
+                        <Line y ={y++}  setSelectedSquare={setSelectedSquare}/>
+                    </div>
+                )}
+            </div>
         </div>
     )
 }
