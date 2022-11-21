@@ -37,7 +37,7 @@ const PrepareForBattle = function () {
 
     };
 
-    function getShip(e) {
+    function getShip() {
         if(selectedShip != undefined && shipList[selectedShip-1].count > 0){
             let copy = Object.assign([], shipList);
             copy[selectedShip-1] = {id: selectedShip, numberOfDecks: shipList[selectedShip-1].numberOfDecks, count: shipList[selectedShip-1].count - 1};
@@ -52,8 +52,7 @@ const PrepareForBattle = function () {
                 case 1:{
                     if(coordinates[selectedSquare.y][selectedSquare.x+1] !== 5 && coordinates[selectedSquare.y][selectedSquare.x+1] !== 1 &&
                         coordinates[selectedSquare.y][selectedSquare.x+2] !== 5 && coordinates[selectedSquare.y][selectedSquare.x+2] !== 1 &&
-                        coordinates[selectedSquare.y][selectedSquare.x+3] !== 5 && coordinates[selectedSquare.y][selectedSquare.x+3] !== 1 &&
-                        selectedSquare.x < 7){
+                        coordinates[selectedSquare.y][selectedSquare.x+3] !== 5 && coordinates[selectedSquare.y][selectedSquare.x+3] !== 1){
                         coordinates[selectedSquare.y][selectedSquare.x] = 1;
                         coordinates[selectedSquare.y][selectedSquare.x+1] = 1;
                         coordinates[selectedSquare.y][selectedSquare.x+2] = 1;
@@ -65,8 +64,7 @@ const PrepareForBattle = function () {
                 }
                 case 2:{
                     if(coordinates[selectedSquare.y][selectedSquare.x+1] !== 5 && coordinates[selectedSquare.y][selectedSquare.x+1] !== 1 &&
-                        coordinates[selectedSquare.y][selectedSquare.x+2] !== 5 && coordinates[selectedSquare.y][selectedSquare.x+2] !== 1 &&
-                        selectedSquare.x < 8){
+                        coordinates[selectedSquare.y][selectedSquare.x+2] !== 5 && coordinates[selectedSquare.y][selectedSquare.x+2] !== 1){
                         coordinates[selectedSquare.y][selectedSquare.x] = 1;
                         coordinates[selectedSquare.y][selectedSquare.x+1] = 1;
                         coordinates[selectedSquare.y][selectedSquare.x+2] = 1;
@@ -76,8 +74,7 @@ const PrepareForBattle = function () {
                     return false;
                 }
                 case 3:{
-                    if(coordinates[selectedSquare.y][selectedSquare.x+1] !== 5 && coordinates[selectedSquare.y][selectedSquare.x+1] !== 1 &&
-                        selectedSquare.x < 9){
+                    if(coordinates[selectedSquare.y][selectedSquare.x+1] !== 5 && coordinates[selectedSquare.y][selectedSquare.x+1] !== 1){
                         coordinates[selectedSquare.y][selectedSquare.x] = 1;
                         coordinates[selectedSquare.y][selectedSquare.x+1] = 1;
                         placementRules(2);
@@ -131,7 +128,7 @@ const PrepareForBattle = function () {
                 }
             }
         }
-        else if(activeShip !== undefined){
+        else{
             let copy = Object.assign([], shipList);
             copy[activeShip-1] = {id: activeShip, numberOfDecks: shipList[activeShip-1].numberOfDecks, count: shipList[activeShip-1].count + 1};
             setShipList(copy);
@@ -152,7 +149,7 @@ const PrepareForBattle = function () {
     }, [selectedSquare]);*/
 
     return (
-        <div onMouseDown={(e) => getShip(e)}
+        <div onMouseDown={() => getShip()}
              onMouseUp={(e) => releasedShip(e)}
              className='container'>
             {activeShip && <div style={{position: 'absolute', left: mousePos.x + 'px', top: mousePos.y + 'px', pointerEvents: 'none'}}>
