@@ -59,16 +59,7 @@
     flex-direction: row;
 }
 
-
-.ship4{
-
-}
-.ship3{
-
-}
-.ship2{
-
-}
-.ship1{
-
+:focus {
+    outline-style: none;
+    outline-width: 0px !important;
 }
