@@ -6,8 +6,7 @@ const Ship = ({ship, setSelectedShip}) => {
         <div>
             <div onMouseEnter={() => setSelectedShip && setSelectedShip(ship.id)}
                  onMouseLeave={() => setSelectedShip && setSelectedShip(undefined)}
-                 className='ship'   style={ ship && {width: ship.numberOfDecks * 45 + 'px'}}
-                 >
+                 className='ship' style={ ship && {width: ship.numberOfDecks * 45 + 'px'}}>
             </div>
         </div>
     );

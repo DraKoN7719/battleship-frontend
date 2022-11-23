@@ -1,11 +1,7 @@
 import React, {useState} from 'react';
 import classes from '../style/Pole.css'
 
-
-
-
 const Square = function (props) {
-
 
     return (
         <div onMouseEnter={() => props.setSelectedSquare({x: props.cord.x, y: props.cord.y})}
