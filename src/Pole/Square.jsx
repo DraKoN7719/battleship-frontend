@@ -6,7 +6,7 @@ const Square = function (props) {
     return (
         <div onMouseEnter={() => props.setSelectedSquare({x: props.cord.x, y: props.cord.y})}
              onMouseLeave={() => props.setSelectedSquare(undefined)}
-             className={props.style}>
+             className='square2'>
             <button className='square'/>
         </div>
     )
