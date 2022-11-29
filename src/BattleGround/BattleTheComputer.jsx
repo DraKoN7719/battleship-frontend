@@ -1,23 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import PoleBattle from "./componentBattle/PoleBattle";
 import classes from '../style/PoleBattle.css'
+import {Link, useLocation, useNavigate } from 'react-router-dom';
 
 const BattleTheComputer = () => {
     const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     const letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'];
-
-    const [polePlayer, setPolePlayer] = useState([
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-    ]);
+    const location = useLocation()
+    const [polePlayer, setPolePlayer] = useState(location.state);
 
     const [poleComputer, setPoleComputer] = useState([
         [0,0,0,0,0,0,0,0,0,0],
@@ -33,18 +23,34 @@ const BattleTheComputer = () => {
     ]);
 
     const [selectedSquare, setSelectedSquare] = useState() //координаты попадания
+    const [motion, setMotion] = useState(true)
 
     useEffect(() => {
         console.log(selectedSquare)
+        if(selectedSquare !== undefined){
+            const poleComputer2 = poleComputer.slice();
+            //проверить попал ли игрок и изменить поле компьютера
+            /*poleComputer2[selectedSquare.y][selectedSquare.x] = 1;
+            setPoleComputer(poleComputer2)*/
+            setMotion(false)
+        }
     }, [selectedSquare]);
+
 
     return (
         <div>
             <div className='poleBattle'>
-                <PoleBattle numbers={numbers} letters={letters}/>
+                <div>
+                    <PoleBattle numbers={numbers} letters={letters}/>
+                    <label style={{display: 'flex', justifyContent: 'center', marginTop: '20px', fontSize: '20px'}}>Ваше поле</label>
+                </div>
                 <div className='lineBattle'/>
-                <div className={'arrow arrow-left'}/>
-                <PoleBattle numbers={numbers} letters={letters} setSelectedSquare={setSelectedSquare}/>
+                <div className= {motion ? 'arrow arrow-right' : 'arrow arrow-left'}/>
+                <div>
+                    <PoleBattle numbers={numbers} letters={letters} setSelectedSquare={setSelectedSquare} motion={motion}/>
+                    <label style={{display: 'flex', justifyContent: 'center', marginTop: '20px', fontSize: '20px'}}>Поле противника</label>
+                </div>
+
             </div>
         </div>
     );

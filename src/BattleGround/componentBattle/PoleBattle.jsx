@@ -1,7 +1,7 @@
 import React from 'react';
 import LineBattle from "./LineBattle";
 
-const PoleBattle = ({numbers, letters, setSelectedSquare}) => {
+const PoleBattle = ({numbers, letters, setSelectedSquare, motion}) => {
     let y = 0;
     return (
         <div>
@@ -14,11 +14,11 @@ const PoleBattle = ({numbers, letters, setSelectedSquare}) => {
             </div>
             <div className={'pole'}>
                 {numbers.map(number =>
-                    <div   className="leftLine">
-                        <div style={{justifyContent: 'center', width: '45px', height: '45px', fontSize: '24px', lineHeight: '45px', display: 'flex'}}>
+                    <div  className="leftLine">
+                        <div  style={{justifyContent: 'center', width: '45px', height: '45px', fontSize: '24px', lineHeight: '45px', display: 'flex'}}>
                             {number}
                         </div>
-                        <LineBattle y ={y++} setSelectedSquare={setSelectedSquare}/>
+                        <LineBattle y ={y++} setSelectedSquare={setSelectedSquare} motion={motion}/>
                     </div>
                 )}
             </div>

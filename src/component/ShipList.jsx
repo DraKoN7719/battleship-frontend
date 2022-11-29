@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import classes from '../style/Ship.css'
 import ponchik from '../style/Pole.css'
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import Ship from "./Ship";
 import PlacementStrategy from "./PlacementStrategy";
 
-const ShipList = ({shipList, setSelectedShip, setCoordinates}) => {
+const ShipList = ({shipList, setSelectedShip, setCoordinates, coordinates}) => {
 
     return (
         <div>
@@ -22,7 +22,7 @@ const ShipList = ({shipList, setSelectedShip, setCoordinates}) => {
             )}
             <PlacementStrategy setCoordinates={setCoordinates}/>
             <Link  to="/" className='button_back'>Назад</Link>
-            <Link  to="/battleTheComputer" className='button_battle'>В бой</Link>
+            <Link  to="/battleTheComputer" state={coordinates} className='button_battle'>В бой</Link>
         </div>
     );
 };

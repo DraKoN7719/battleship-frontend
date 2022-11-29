@@ -63,7 +63,6 @@ const PrepareForBattle = function () {
                         coordinates[selectedSquare.y+verticalShip[0]][selectedSquare.x+horizontalShip[0]] = 1;
                         coordinates[selectedSquare.y+verticalShip[1]][selectedSquare.x+horizontalShip[1]] = 1;
                         coordinates[selectedSquare.y+verticalShip[2]][selectedSquare.x+horizontalShip[2]] = 1;
-                        console.log('ddddddd')
                         placementRules(4);
                         return true;
                     }
@@ -176,7 +175,7 @@ const PrepareForBattle = function () {
                 transform: invertedShip ? 'rotate(90deg)' : 'rotate(0deg)'}}>
                 <Ship ship={shipList[activeShip-1]}/>
             </div>}
-            <ShipList shipList={shipList} setSelectedShip={setSelectedShip} setCoordinates={setCoordinates}/>
+            <ShipList shipList={shipList} setSelectedShip={setSelectedShip} setCoordinates={setCoordinates} coordinates={coordinates}/>
             <Pole numbers={numbers} letters={letters} setSelectedSquare={setSelectedSquare}/>
         </div>
     )
