@@ -124,6 +124,16 @@ const PrepareForBattle = function () {
         }
         setCoordinates(coordinates2);
         console.log(coordinates)
+        let mas =  document.getElementsByClassName('square')
+        for(let i = 0 ; i < 10; i++)
+            for(let j = 0 ; j < 10; j++) {
+                if (coordinates[i][j] === 1) {
+                    mas[i * 10 + j].style = "background-color: lightblue; border-color: blue;"
+                }
+                if (coordinates[i][j] === 2 || coordinates[i][j] === 4 || coordinates[i][j] === 6 || coordinates[i][j] === 8) {
+                    mas[i * 10 + j].style = "background-color: Gainsboro ; "
+                }
+            }
     }
 
     function releasedShip(e) {
