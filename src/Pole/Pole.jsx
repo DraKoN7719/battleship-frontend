@@ -1,5 +1,5 @@
 import React from 'react';
-import classes from '../style/Pole.css'
+import classes from '../styles/Pole.css'
 import Line from "./Line";
 
 const Pole = function ({numbers, letters, setSelectedSquare}) {

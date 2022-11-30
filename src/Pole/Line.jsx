@@ -1,5 +1,5 @@
 import React from 'react';
-import classes from '../style/Pole.css'
+import classes from '../styles/Pole.css'
 import Square from "./Square";
 
 const Line = function (props) {

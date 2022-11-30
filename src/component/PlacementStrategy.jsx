@@ -1,57 +1,56 @@
 import React, {useState} from 'react';
-import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import ponchik from '../style/Pole.css'
+import ponchik from '../styles/Pole.css'
 
-const PlacementStrategy = ({setCoordinates}) => {
+const PlacementStrategy = ({setCoordinates, shipList, setShipList}) => {
     const [placementString, setPlacementString] = useState("");
-    const navigate = useNavigate();
 
-    function parseStringInMatrix() {
+    /*function parseStringInMatrix() {
         let matrix = [];
         for(let i = 0, j = 19, k = 0; i < 201 && j < 201; i+=20, j+=20, k++){
             matrix[k] = placementString.substring(i,j).split(",").map(Number);
         }
         setCoordinates(matrix);
-    }
+    }*/
 
     function shoresStrategy() {
         axios.get(`http://localhost:8080/api/placement/shores`)
             .then(res => {
                 if(res.data){
-                    setPlacementString(res.data);
-                    parseStringInMatrix();
-                    navigate(`/PrepareForBattle`)
+                    setCoordinates(res.data);
                 }})
             .catch((error) => {
                 console.error(error.response);
             })
+        removeCountShipList()
     }
 
     function randomStrategy() {
         axios.get(`http://localhost:8080/api/placement/random`)
             .then(res => {
                 if(res.data){
-                    setPlacementString(res.data);
-                    parseStringInMatrix();
-                    navigate(`/PrepareForBattle`)
+                    setCoordinates(res.data);
                 }})
             .catch((error) => {
                 console.error(error.response);
             })
+        removeCountShipList()
+    }
+
+    function removeCountShipList() {
+        shipList.map(x => x.count = 0);
     }
 
     function halfFieldStrategy() {
         axios.get(`http://localhost:8080/api/placement/halfField`)
             .then(res => {
                 if(res.data){
-                    setPlacementString(res.data);
-                    parseStringInMatrix();
-                    navigate(`/PrepareForBattle`)
+                    setCoordinates(res.data);
                 }})
             .catch((error) => {
                 console.error(error.response);
             })
+        removeCountShipList()
     }
 
     return (

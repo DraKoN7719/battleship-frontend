@@ -18,7 +18,6 @@
     width: 45px;
     height: 45px;
     border: 1px solid;
-
 }
 
 .square2{
@@ -28,15 +27,28 @@
 
 }
 
-.shipSquare{
-    background-color: greenyellow;
-    width: 45px;
-    height: 45px;
-    border: 1px solid;
-}
 .square:hover{
     background-color: #C0C0C0;
     cursor: pointer;
+}
+.squarePlacement{
+    background-color: white;
+    border-color: black;
+}
+.squarePlacement1{
+    background-color: lightblue;
+    border-color: blue;
+}
+.squarePlacement2{
+    background-color: Gainsboro;
+}
+.squarePlacement:hover{
+    background-color: #C0C0C0;
+}
+.detected{
+    width: 45px;
+    height: 45px;
+    border: 1px solid;
 }
 
 .line{

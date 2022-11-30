@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import Pole from "./Pole";
 import ShipList from "../component/ShipList";
-import classes from '../style/Pole.css'
+import classes from '../styles/Pole.css'
 import Ship from "../component/Ship";
+import {renderShips} from "../component/RenderShips";
 
 const PrepareForBattle = function () {
     const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
@@ -124,16 +125,6 @@ const PrepareForBattle = function () {
         }
         setCoordinates(coordinates2);
         console.log(coordinates)
-        let mas =  document.getElementsByClassName('square')
-        for(let i = 0 ; i < 10; i++)
-            for(let j = 0 ; j < 10; j++) {
-                if (coordinates[i][j] === 1) {
-                    mas[i * 10 + j].style = "background-color: lightblue; border-color: blue;"
-                }
-                if (coordinates[i][j] === 2 || coordinates[i][j] === 4 || coordinates[i][j] === 6 || coordinates[i][j] === 8) {
-                    mas[i * 10 + j].style = "background-color: Gainsboro ; "
-                }
-            }
     }
 
     function releasedShip(e) {
@@ -152,16 +143,15 @@ const PrepareForBattle = function () {
     }
 
     useEffect(() => {
+        renderShips(coordinates)
+    }, [coordinates]);
+
+    useEffect(() => {
         document.addEventListener("mousemove", handleMouse);
         return () => {
             document.removeEventListener("mousemove", handleMouse);
         };
     }, []);
-
-    /*useEffect(() => {
-        console.log(invertedShip)
-    }, [invertedShip]);*/
-
 
     function orientationShip(e) {
         if (activeShip !== undefined && e.code === "KeyR"){
@@ -185,7 +175,8 @@ const PrepareForBattle = function () {
                 transform: invertedShip ? 'rotate(90deg)' : 'rotate(0deg)'}}>
                 <Ship ship={shipList[activeShip-1]}/>
             </div>}
-            <ShipList shipList={shipList} setSelectedShip={setSelectedShip} setCoordinates={setCoordinates} coordinates={coordinates}/>
+            <ShipList shipList={shipList} setSelectedShip={setSelectedShip} setCoordinates={setCoordinates} coordinates={coordinates}
+            setShipList={setShipList}/>
             <Pole numbers={numbers} letters={letters} setSelectedSquare={setSelectedSquare}/>
         </div>
     )
