@@ -4,6 +4,7 @@ import ShipList from "../component/ShipList";
 import classes from '../styles/Pole.css'
 import Ship from "../component/Ship";
 import {renderShips} from "../component/RenderShips";
+import Modal from "../Modal/Modal";
 
 const PrepareForBattle = function () {
     const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
@@ -14,6 +15,7 @@ const PrepareForBattle = function () {
         {id: 3, numberOfDecks: 2, count: 3},
         {id: 4, numberOfDecks: 1, count: 4},
     ]);
+    const [modalActive, setModalActive] = useState(false);
     const [coordinates, setCoordinates] = useState([
         [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0],
@@ -27,6 +29,7 @@ const PrepareForBattle = function () {
         [0,0,0,0,0,0,0,0,0,0],
     ]);
     const [invertedShip, setInvertedShip] = useState(false)
+    const [isBattleThePlayer, setIsBattleThePlayer] = useState(false) // проверка на игру с игроком
     const [countOrientation, setCountOrientation] = useState(0)
     const [selectedShip, setSelectedShip] = useState()
     const [selectedSquare, setSelectedSquare] = useState() // координаты куда пользователь пытается поставить корабль
@@ -175,9 +178,10 @@ const PrepareForBattle = function () {
                 transform: invertedShip ? 'rotate(90deg)' : 'rotate(0deg)'}}>
                 <Ship ship={shipList[activeShip-1]}/>
             </div>}
-            <ShipList shipList={shipList} setSelectedShip={setSelectedShip} setCoordinates={setCoordinates} coordinates={coordinates}
-            setShipList={setShipList}/>
-            <Pole numbers={numbers} letters={letters} setSelectedSquare={setSelectedSquare}/>
+            <ShipList shipList={shipList} setSelectedShip={setSelectedShip} setCoordinates={setCoordinates}
+            setShipList={setShipList} setModalActive={setModalActive} isBattleThePlayer={isBattleThePlayer} coordinates={coordinates}/>
+            <Pole numbers={numbers} letters={letters} setSelectedSquare={setSelectedSquare} placement={coordinates} shipList={shipList}/>
+            <Modal active={modalActive} setActive={setModalActive} coordinates={coordinates}/>
         </div>
     )
 }

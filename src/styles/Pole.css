@@ -146,3 +146,33 @@
 a, a:visited, a:hover, a:active {
     color: inherit;
 }
+
+.save {
+    margin-top: 30px;
+    display: flex;
+}
+
+.saveAndLoad_button {
+    width: 130px;
+    height: 40px;
+    font-size: 20px;
+    background: #D9D9D9;
+    border: 1px solid #000000;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.load {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+
+}
+
+.saveAndLoad_button:hover {
+    background-color: darkgray;
+}
+

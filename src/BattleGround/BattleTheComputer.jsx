@@ -26,7 +26,7 @@ const BattleTheComputer = () => {
 
     const [selectedSquare, setSelectedSquare] = useState() //координаты попадания
     const [motion, setMotion] = useState(true)
-
+    const cc = useState();
     useEffect(() => {
         console.log(selectedSquare)
         if(selectedSquare !== undefined){
