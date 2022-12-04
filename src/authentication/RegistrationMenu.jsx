@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import axios from "axios";
 import {useLocation, useNavigate} from "react-router-dom";
+import classes from "../style/Authentication.css";
 
 const RegistrationMenu = function () {
     const [inputUserLogin, setInputUserLogin] = useState("");
@@ -26,13 +27,16 @@ const RegistrationMenu = function () {
     }
     return (
         <div className="Authentication">
-            <p><input type="text" value={inputUserLogin} placeholder="Введите логин"
+            <p><input style={{borderRadius: '20px', width: '280px', height: '40px', marginLeft: 'auto', paddingLeft: '18px', fontSize: '20px'}}
+                      type="text" value={inputUserLogin} placeholder="Введите логин" maxLength={12}
                               onChange={(event) => setInputUserLogin(event.target.value)}/></p>
-            <p><input type="password" value={inputUserPassword} placeholder="Введите пароль"
+            <p><input style={{borderRadius: '20px', width: '280px', height: '40px', marginLeft: 'auto', paddingLeft: '18px', fontSize: '20px'}}
+                      type="password" value={inputUserPassword} placeholder="Введите пароль" maxLength={12}
                              onChange={(event) => setInputUserPassword(event.target.value)}/></p>
-            <p><input type="password" value={inputUserPassword2} placeholder="Повторите пароль"
+            <p><input style={{borderRadius: '20px', width: '280px', height: '40px',  marginLeft: 'auto', paddingLeft: '18px', fontSize: '20px'}}
+                      type="password" value={inputUserPassword2} placeholder="Повторите пароль" maxLength={12}
                              onChange={(event) => setInputUserPassword2(event.target.value)}/></p>
-            <p><input type="button" value="Создать" onClick={createUser}/></p>
+            <p><input className='registration_button' type="button" value="Зарегистрироваться" onClick={createUser}/></p>
         </div>
     )
 }
