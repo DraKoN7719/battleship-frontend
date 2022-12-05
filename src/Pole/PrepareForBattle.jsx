@@ -252,7 +252,6 @@ const PrepareForBattle = function () {
     }
 
     function checkNext(x, y,pos) {
-        console.log(x + " " + y)
         if (checkBounds(x, y) && coordinates[x][y] === 1) {
             coordinates[x][y] = 0;
             deleteArea(x, y,pos);
@@ -262,7 +261,6 @@ const PrepareForBattle = function () {
     }
 
     function deleteArea(x, y,pos) {
-        console.log(pos + "  " + pos ==='right')
         if(pos === 'right'){
             if (checkBounds(x + 1, y + 1) && coordinates[x + 1][y + 1] >= 2) coordinates[x + 1][y + 1] -= 2;
             if (checkBounds(x - 1, y + 1) && coordinates[x - 1][y + 1] >= 2) coordinates[x - 1][y + 1] -= 2;
