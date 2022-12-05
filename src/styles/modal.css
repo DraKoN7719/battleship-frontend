@@ -26,6 +26,12 @@
     width: 250px;
 }
 
+.modal__content_2 {
+    border-radius: 12px;
+    padding: 20px;
+    background-color: white;
+}
+
 .modal__content__button {
     border-radius: 20px;
     text-decoration: none;

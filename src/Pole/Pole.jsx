@@ -3,7 +3,7 @@ import classes from '../styles/Pole.css'
 import Line from "./Line";
 import SaveAndLoad from "../component/SaveAndLoad";
 
-const Pole = function ({numbers, letters, setSelectedSquare, placement, shipList}) {
+const Pole = function ({numbers, letters, setSelectedSquare, placement, shipList, setCoordinates}) {
     let y = 0;
     return (
         <div >
@@ -24,7 +24,7 @@ const Pole = function ({numbers, letters, setSelectedSquare, placement, shipList
                     </div>
                 )}
             </div>
-            <SaveAndLoad placement={placement} shipList={shipList}/>
+            <SaveAndLoad placement={placement} shipList={shipList} setCoordinates={setCoordinates}/>
         </div>
     )
 }

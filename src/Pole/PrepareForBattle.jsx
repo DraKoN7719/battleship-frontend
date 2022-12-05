@@ -2,11 +2,15 @@ import React, {useEffect, useState} from 'react';
 import Pole from "./Pole";
 import ShipList from "../component/ShipList";
 import classes from '../styles/Pole.css'
+import classess from "../styles/modal.css"
 import Ship from "../component/Ship";
 import {renderShips} from "../component/RenderShips";
 import Modal from "../Modal/Modal";
+import {Link} from "react-router-dom";
 
 const PrepareForBattle = function () {
+    //Изменить удаление кораблей на правую либо левую кнопку мыши
+    //Добавить редактирование уже расположенного корабля
     const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     const letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'];
     const [shipList, setShipList] = useState([
@@ -314,8 +318,12 @@ const PrepareForBattle = function () {
                       setShipList={setShipList} setModalActive={setModalActive} isBattleThePlayer={isBattleThePlayer}
                       coordinates={coordinates}/>
             <Pole numbers={numbers} letters={letters} setSelectedSquare={setSelectedSquare} placement={coordinates}
-                  shipList={shipList}/>
-            <Modal active={modalActive} setActive={setModalActive} coordinates={coordinates}/>
+                  shipList={shipList} setCoordinates={setCoordinates}/>
+            <Modal active={modalActive} setActive={setModalActive} style={'modal__content'}>
+                <Link  to="/battleTheComputer" state={coordinates} className='modal__content__button'>Легкий</Link>
+                <Link  to="/battleTheComputer" state={coordinates} className='modal__content__button'>Средний</Link>
+                <Link  to="/battleTheComputer" state={coordinates} className='modal__content__button'>Сложный</Link>
+            </Modal>
         </div>
     )
 }
