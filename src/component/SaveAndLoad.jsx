@@ -1,15 +1,34 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {Link} from "react-router-dom";
+import Modal from "../Modal/Modal";
+import classes from "../styles/LoadModal.css"
 
-const SaveAndLoad = ({placement, shipList}) => {
+const SaveAndLoad = ({placement, shipList, setCoordinates}) => {
     const [nameSave, setNameSave] = useState();
+    const [modalActive, setModalActive] = useState(false);
+    const [listPlacement, setListPlacement] = useState();
+    const [idUser, setIdUser] = useState(4);
+
+    function getListPlacement() {
+        axios.get(`http://localhost:8080/api/placement/${idUser}`
+        ).then(res => {
+            if(res.data) setListPlacement(res.data);
+        }).catch((error) => {
+            console.error(error.response);
+        })
+        return undefined
+    }
+
+    useEffect(()=>{
+        getListPlacement()
+    }, [])
 
     function savePlacement(e) {
         e.stopPropagation()
-        axios.post(`http://localhost:8080/api/placement/save`, {
-            "id_user": "В будущем будет ip пользователя",
-            "nameSave": nameSave,
+        axios.post(`http://localhost:8080/api/placement`, {
+            "userId": "4",
+            "placementName": nameSave,
             "placement": placement
         }).catch((error) => {
             window.alert("Расстановка с таким именем уже существует");
@@ -17,8 +36,9 @@ const SaveAndLoad = ({placement, shipList}) => {
         })
     }
 
-    function removeCountShipList() {
+    function removeCountShipList(place) {
         shipList.map(x => x.count = 0);
+        setCoordinates(place.placement)
     }
 
     return (
@@ -34,7 +54,31 @@ const SaveAndLoad = ({placement, shipList}) => {
                             style={{marginLeft: 'auto'}}>Сохранить</button>
                 }
             </div>
-            <button className='load saveAndLoad_button'>Загрузить</button>
+            <button className='load saveAndLoad_button' onClick={() => setModalActive(true)}>Загрузить</button>
+            <Modal active={modalActive} setActive={setModalActive} style={'modal__content_2'}>
+                <div className="load-scroll-table">
+                    <table style={{border: '3px solid black', background: '#a9a7a7'}}>
+                        <thead>
+                        <tr>
+                            <th>Название расстановки</th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <div className="load-scroll-table-body">
+                        <table>
+                            <tbody>
+                            {listPlacement && listPlacement.map(place =>
+                                <tr>
+                                    <td onClick={() => removeCountShipList(place)}>
+                                        {place.placementName}
+                                    </td>
+                                </tr>
+                            )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };
