@@ -1,0 +1,32 @@
+.listUserPlacement {
+    display: flex;
+    justify-content: space-evenly;
+    padding-top: 5%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+table {
+    border: 3px solid black;
+    width: 500px;
+}
+
+
+th {
+    font-size: 24px;
+    font-weight: bold;
+    background: #efefef;
+    border-bottom: 3px solid black;
+    height: 10%;
+}
+
+td {
+    border-bottom: 3px solid black;
+    padding-left: 40%;
+}
+
+
