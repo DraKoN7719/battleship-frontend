@@ -42,6 +42,11 @@
 .squarePlacement2{
     background-color: Gainsboro;
 }
+.squarePlacement3{
+    background-color: white;
+    border-color: black;
+    cursor: default;
+}
 .squarePlacement:hover{
     background-color: #C0C0C0;
 }
