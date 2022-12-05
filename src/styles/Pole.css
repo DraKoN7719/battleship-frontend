@@ -1,0 +1,178 @@
+.container{
+    display: flex;
+    justify-content: space-evenly;
+    padding-top: 5%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+
+
+
+}
+
+.square{
+    background-color: Transparent;
+    width: 45px;
+    height: 45px;
+    border: 1px solid;
+}
+
+.square2{
+    width: 45px;
+    height: 45px;
+    display: inline;
+
+}
+
+.square:hover{
+    background-color: #C0C0C0;
+    cursor: pointer;
+}
+.squarePlacement{
+    background-color: white;
+    border-color: black;
+}
+.squarePlacement1{
+    background-color: lightblue;
+    border-color: blue;
+}
+.squarePlacement2{
+    background-color: Gainsboro;
+}
+.squarePlacement:hover{
+    background-color: #C0C0C0;
+}
+.detected{
+    width: 45px;
+    height: 45px;
+    border: 1px solid;
+}
+
+.line{
+
+    width: 450px;
+    height: 45px;
+}
+
+.pole{
+    display: flex;
+    flex-direction: column;
+}
+
+.leftLine {
+    display: flex;
+}
+
+.topLine {
+    margin-left: 45px;
+    display: flex;
+    flex-direction: row;
+}
+
+:focus {
+    outline-style: none;
+    outline-width: 0px !important;
+}
+
+.my_div_button {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.my_button {
+    font-size: 20px;
+    margin-left: 20px;
+    width: 140px;
+    height: 50px;
+    background: #D9D9D9;
+    border: 1px solid #000000;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.my_button:hover{
+    background-color: darkgray;
+}
+
+
+.button_back {
+    left: 35%;
+    top: 85%;
+    position: absolute;
+    width: 160px;
+    height: 48px;
+    background: #D9D9D9;
+    border: 3px solid #000000;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.button_battle {
+    right: 35%;
+    top: 85%;
+    position: absolute;
+    width: 160px;
+    height: 48px;
+    background: #D9D9D9;
+    border: 3px solid #000000;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.button_back:hover {
+    background-color: darkgray;
+}
+
+.button_battle:hover {
+    background-color: darkgray;
+}
+
+a, a:visited, a:hover, a:active {
+    color: inherit;
+}
+
+.save {
+    margin-top: 30px;
+    display: flex;
+}
+
+.saveAndLoad_button {
+    width: 130px;
+    height: 40px;
+    font-size: 20px;
+    background: #D9D9D9;
+    border: 1px solid #000000;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.load {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+
+}
+
+.saveAndLoad_button:hover {
+    background-color: darkgray;
+}
+

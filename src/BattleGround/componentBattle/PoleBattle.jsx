@@ -1,12 +1,10 @@
 import React from 'react';
-import classes from '../styles/Pole.css'
-import Line from "./Line";
-import SaveAndLoad from "../component/SaveAndLoad";
+import LineBattle from "./LineBattle";
 
-const Pole = function ({numbers, letters, setSelectedSquare, placement, shipList}) {
+const PoleBattle = ({numbers, letters, setSelectedSquare, motion, isPolePlayer}) => {
     let y = 0;
     return (
-        <div >
+        <div>
             <div className="topLine">
                 {letters.map(letter =>
                     <div style={{justifyContent: 'center', width: '45px', height: '45px', fontSize: '24px', lineHeight: '45px', display: 'flex'}}>
@@ -16,16 +14,16 @@ const Pole = function ({numbers, letters, setSelectedSquare, placement, shipList
             </div>
             <div className={'pole'}>
                 {numbers.map(number =>
-                    <div   className="leftLine">
-                        <div style={{justifyContent: 'center', width: '45px', height: '45px', fontSize: '24px', lineHeight: '45px', display: 'flex'}}>
+                    <div  className="leftLine">
+                        <div  style={{justifyContent: 'center', width: '45px', height: '45px', fontSize: '24px', lineHeight: '45px', display: 'flex'}}>
                             {number}
                         </div>
-                        <Line y ={y++}  setSelectedSquare={setSelectedSquare}/>
+                        <LineBattle y ={y++} setSelectedSquare={setSelectedSquare} motion={motion} isPolePlayer={isPolePlayer}/>
                     </div>
                 )}
             </div>
-            <SaveAndLoad placement={placement} shipList={shipList}/>
         </div>
     )
-}
-export default Pole;
+};
+
+export default PoleBattle;

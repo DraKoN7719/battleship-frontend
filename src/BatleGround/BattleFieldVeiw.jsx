@@ -1,3 +1,0 @@
-class BattleFieldVeiw extends BattleField{
-
-}

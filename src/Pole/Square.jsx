@@ -1,26 +1,13 @@
 import React, {useState} from 'react';
-import classes from '../style/Pole.css'
-
-
-
+import classes from '../styles/Pole.css'
 
 const Square = function (props) {
 
-    let [isShip , setShip] = useState(false);
-
-    function getCords() {
-        setShip(isShip = !isShip);
-        console.log(props.cord.x + ' ' + props.cord.y + '    isShip = ' + isShip )
-    }
-
     return (
-        <div className={'square2'}>
-            {isShip
-                ?
-                <button className={'shipSquare'} onClick={getCords}/>
-                :
-                <button className={'square'} onClick={getCords}/>
-            }
+        <div onMouseEnter={() => props.setSelectedSquare({x: props.cord.x, y: props.cord.y})}
+             onMouseLeave={() => props.setSelectedSquare(undefined)}
+             className='square2'>
+            <button className='square detected'/>
         </div>
     )
 }
