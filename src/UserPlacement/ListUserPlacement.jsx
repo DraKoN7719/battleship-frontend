@@ -34,7 +34,6 @@ const ListUserPlacement = () => {
         }).catch((error) => {
             console.error(error.response);
         })
-        return undefined
     }
 
     useEffect(() => {
