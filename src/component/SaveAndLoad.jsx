@@ -30,10 +30,18 @@ const SaveAndLoad = ({placement, shipList, setCoordinates}) => {
             "userId": idUser,
             "placementName": nameSave,
             "placement": placement
-        }).catch((error) => {
+        }).then(
+            () => {
+                alert("Расстановка сохранена");
+                document.getElementById("nameSave").value = "";
+                setNameSave("");
+            })
+            .catch((error) => {
             window.alert("Расстановка с таким именем уже существует");
             console.error(error.response);
         })
+        setTimeout(()=> getListPlacement(), 100);
+
     }
 
     function removeCountShipList(place) {
@@ -44,7 +52,7 @@ const SaveAndLoad = ({placement, shipList, setCoordinates}) => {
     return (
         <div >
             <div className='save'>
-                <input placeholder='Название расстановки'
+                <input id='nameSave' placeholder='Название расстановки'
                        style={{borderRadius: '20px', width: '280px', marginLeft: 'auto', paddingLeft: '18px', fontSize: '20px'}}
                        onChange={(e) => setNameSave(e.target.value)}/>
                 {(shipList.filter(x => x.count === 0)).length  === 4 ? <button onClick={(e) => savePlacement(e)}
