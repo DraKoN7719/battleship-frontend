@@ -10,7 +10,7 @@ const ListUserPlacement = () => {
     //Добавить подсветку выбранной расстановки
     const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     const letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'];
-    const [idUser, setIdUser] = useState(4);
+    const [idUser, setIdUser] = useState(1);
     const [listPlacement, setListPlacement] = useState();
     const [selectedSquare, setSelectedSquare] = useState()
     const [coordinates, setCoordinates] = useState([
@@ -47,8 +47,9 @@ const ListUserPlacement = () => {
 
     function deleteUserPlacement(placementName) {
         if(placementName !== undefined)
-            axios.delete(`http://localhost:8080/api/placement/${idUser}`,
-                placementName
+            axios.delete(`http://localhost:8080/api/placement/${idUser}?placementName=${placementName}`)
+                .then(
+                getListPlacement()
             ).catch((error) => {
                 console.error(error.response);
             })
