@@ -47,7 +47,7 @@ const ListUserPlacement = () => {
     function deleteUserPlacement(placementName) {
         if(placementName !== undefined)
             axios.delete(`http://localhost:8080/api/placement/${idUser}?placementName=${placementName}`)
-                .then(
+                .then(() =>
                 getListPlacement()
             ).catch((error) => {
                 console.error(error.response);

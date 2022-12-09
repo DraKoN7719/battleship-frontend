@@ -24,6 +24,9 @@ const MainMenu = function () {
                 <Link to="/listUserPlacement" className={'MenuText'}>
                    Мои расстановки
                 </Link>
+                <Link to="/loadGame" className={'MenuText'} >
+                    Сохраненные игры
+                </Link>
                 <Link to="/historyGame" className={'MenuText'} >
                    История игр
                 </Link>
