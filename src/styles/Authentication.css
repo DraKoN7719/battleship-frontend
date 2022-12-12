@@ -5,6 +5,11 @@
     flex-direction: column;
     margin-top: 15%;
 
+
+}
+
+p{
+    padding: 18px;
 }
 
 .registration_button {
