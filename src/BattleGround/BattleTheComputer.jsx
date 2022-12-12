@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import PoleBattle from "./componentBattle/PoleBattle";
 import classes from '../styles/PoleBattle.css'
-import {Link, useLocation, useNavigate } from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {renderShipsBattle} from "../component/RenderShips";
 import {renderShipsBattleComp} from "../component/RenderShips";
 import axios from "axios";
+
 
 
 const BattleTheComputer = () => {
@@ -12,54 +13,53 @@ const BattleTheComputer = () => {
     const letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'];
     const location = useLocation()
     const [polePlayer, setPolePlayer] = useState(location.state);
+    let motion2 = true
 
 
     const [poleComputer, setPoleComputer] = useState([
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ]);
 
-    const [selectedSquare, setSelectedSquare] = useState({x: null,y:null}) //координаты попадания
-    const [selectedComp, setSelectedComp] = useState({x: null,y:null});//координаты выстрела оппонента
+    const [selectedSquare, setSelectedSquare] = useState({x: null, y: null}) //координаты попадания
+    const [selectedComp, setSelectedComp] = useState({x: null, y: null});//координаты выстрела оппонента
     const [motion, setMotion] = useState(true)
     const cc = useState();
 
-    function send(){
-        axios.post(`http://localhost:8080/api/shoot`, {
+    function  send() {
+         axios.post(`http://localhost:8080/api/shoot`, {
             "x": selectedSquare.y,
             "y": selectedSquare.x
         }).then(res => {
             console.log(res.data)
             if (res.data === 1) console.log('Попал')
-            if(res.data === 2) console.log('Убил')
-            if(res.data === 0) console.log("мимо");
-            if(res.data === 1) {
+            if (res.data === 2) console.log('Убил')
+            if (res.data === 0) console.log("мимо");
+            if (res.data === 1) {
                 const poleComputer2 = poleComputer.slice();
                 poleComputer2[selectedSquare.y][selectedSquare.x] = 1;
                 setPoleComputer(poleComputer2);
-                setMotion(prevMotion =>true)
-            }
-            else  if(res.data === 0){
+            } else if (res.data === 0) {
                 const poleComputer2 = poleComputer.slice();
                 poleComputer2[selectedSquare.y][selectedSquare.x] = 2;
                 setPoleComputer(poleComputer2);
-                setMotion(prevMotion =>false)
-            }
-            else  if(res.data === 2){
+                motion2 = false;
+                setMotion(motion => false)
+            } else if (res.data === 2) {
                 const poleComputer2 = poleComputer.slice();
                 poleComputer2[selectedSquare.y][selectedSquare.x] = 1;
-                setArea(selectedSquare.y,selectedSquare.x,poleComputer2)
+                setArea(selectedSquare.y, selectedSquare.x, poleComputer2)
                 setPoleComputer(poleComputer2);
-                setMotion(prevMotion =>true)
             }
+             compTurn()
 
         }).catch((error) => {
             console.error(error.response);
@@ -67,30 +67,31 @@ const BattleTheComputer = () => {
 
     }
 
-    function getCompTurn(){
-        axios.post(`http://localhost:8080/api/shootComp`, {
-
-        }).then(res => {
-            console.log(res.data)
+    function getCompTurn() {
+        axios.post(`http://localhost:8080/api/shootComp`, {}).then(res => {
             let x = res.data.x;
             let y = res.data.y;
 
             const polePlayer2 = polePlayer.slice();
-            if(polePlayer2[x][y] === 1) {
+            if (polePlayer2[x][y] === 1) {
                 polePlayer2[x][y] = -1;
-                setMotion(prevMotion =>false)
             }
 
-            if(polePlayer2[x][y] === 0) {
-                setMotion(prevMotion =>true)
+            if (polePlayer2[x][y] === 0) {
+                motion2 = true;
+                setMotion(motion => true)
                 polePlayer2[x][y] = -2;
             }
 
-            if(polePlayer2[x][y] >=2) {
-                setMotion(prevMotion =>true)
+            if (polePlayer2[x][y] >= 2) {
+                motion2 = true;
+                setMotion(motion => true)
                 polePlayer2[x][y] = -2;
             }
+            sleep(500)
             setPolePlayer(polePlayer2);
+            if(motion2 === false) getCompTurn()
+            else setMotion(motion2)
 
         }).catch((error) => {
             console.error(error.response);
@@ -99,29 +100,29 @@ const BattleTheComputer = () => {
     }
 
 
-    function setArea(x,y,pole) {
-        setBorder(x,y,pole);
+    function setArea(x, y, pole) {
+        setBorder(x, y, pole);
         let n = 1;
-        while(checkBounds(x+n,y) && pole[x+n][y] === 1){
-            setBorder(x+n,y,pole)
+        while (checkBounds(x + n, y) && pole[x + n][y] === 1) {
+            setBorder(x + n, y, pole)
             n++
         }
-        n=1;
+        n = 1;
 
-        while(checkBounds(x-n,y) && pole[x-n][y] === 1){
-            setBorder(x-n,y,pole)
+        while (checkBounds(x - n, y) && pole[x - n][y] === 1) {
+            setBorder(x - n, y, pole)
             n++
         }
-        n=1;
+        n = 1;
 
-        while(checkBounds(x,y+n) && pole[x][y+n]=== 1){
-            setBorder(x,y+n,pole)
+        while (checkBounds(x, y + n) && pole[x][y + n] === 1) {
+            setBorder(x, y + n, pole)
             n++
         }
-        n=1;
+        n = 1;
 
-        while(checkBounds(x,y-n) && pole[x][y-n]=== 1){
-            setBorder(x,y-n,pole)
+        while (checkBounds(x, y - n) && pole[x][y - n] === 1) {
+            setBorder(x, y - n, pole)
             n++
         }
     }
@@ -130,28 +131,32 @@ const BattleTheComputer = () => {
         return x < 10 && x > -1 && y < 10 && y > -1
     }
 
-    function setBorder(x,y,pole){
-        if(checkBounds(x+1,y) && pole[x+1][y] === 0) pole[x+1][y] = 2
-        if(checkBounds(x-1,y) && pole[x-1][y] === 0) pole[x-1][y] = 2
-        if(checkBounds(x,y-1) && pole[x][y-1] === 0) pole[x][y-1] = 2
-        if(checkBounds(x,y+1) && pole[x][y+1] === 0) pole[x][y+1] = 2
+    function setBorder(x, y, pole) {
+        if (checkBounds(x + 1, y) && pole[x + 1][y] === 0) pole[x + 1][y] = 2
+        if (checkBounds(x - 1, y) && pole[x - 1][y] === 0) pole[x - 1][y] = 2
+        if (checkBounds(x, y - 1) && pole[x][y - 1] === 0) pole[x][y - 1] = 2
+        if (checkBounds(x, y + 1) && pole[x][y + 1] === 0) pole[x][y + 1] = 2
 
-        if(checkBounds(x+1,y+1) && pole[x+1][y+1] === 0) pole[x+1][y+1] = 2
-        if(checkBounds(x-1,y-1) && pole[x-1][y-1] === 0) pole[x-1][y-1] = 2
-        if(checkBounds(x+1,y-1) && pole[x+1][y-1] === 0) pole[x+1][y-1] = 2
-        if(checkBounds(x-1,y+1) && pole[x-1][y+1] === 0) pole[x-1][y+1] = 2
+        if (checkBounds(x + 1, y + 1) && pole[x + 1][y + 1] === 0) pole[x + 1][y + 1] = 2
+        if (checkBounds(x - 1, y - 1) && pole[x - 1][y - 1] === 0) pole[x - 1][y - 1] = 2
+        if (checkBounds(x + 1, y - 1) && pole[x + 1][y - 1] === 0) pole[x + 1][y - 1] = 2
+        if (checkBounds(x - 1, y + 1) && pole[x - 1][y + 1] === 0) pole[x - 1][y + 1] = 2
     }
 
-    useEffect(() => {
-        if(motion === true)
-        if(selectedSquare.x !== null && poleComputer[selectedSquare.y][selectedSquare.x] !== 1 && poleComputer[selectedSquare.y][selectedSquare.x] !== 2){
-                send();
-            setMotion(prevMotion =>  false)
 
-                getCompTurn()
-            setMotion(prevMotion =>  true)
-        }
+
+
+    useEffect(() => {
+        if (motion === true)
+            if (selectedSquare.x !== null && poleComputer[selectedSquare.y][selectedSquare.x] !== 1 && poleComputer[selectedSquare.y][selectedSquare.x] !== 2) {
+               send();
+            }
     }, [selectedSquare]);
+
+    function compTurn(){
+        if(motion2 === false)
+        getCompTurn()
+    }
 
     function sleep(milliseconds) {
         const date = Date.now();
@@ -167,7 +172,9 @@ const BattleTheComputer = () => {
 
     useEffect(() => {
         renderShipsBattleComp(poleComputer)
+        //
     }, [poleComputer]);
+
 
 
     return (
@@ -175,13 +182,16 @@ const BattleTheComputer = () => {
             <div className='poleBattle'>
                 <div>
                     <PoleBattle numbers={numbers} letters={letters} isPolePlayer={true}/>
-                    <label style={{display: 'flex', justifyContent: 'center', marginTop: '20px', fontSize: '20px'}}>Ваше поле</label>
+                    <label style={{display: 'flex', justifyContent: 'center', marginTop: '20px', fontSize: '20px'}}>Ваше
+                        поле</label>
                 </div>
                 <div className='lineBattle'/>
-                <div className= {motion ? 'arrow arrow-right' : 'arrow arrow-left'}/>
+                <div className={motion ? 'arrow arrow-right' : 'arrow arrow-left'}/>
                 <div>
-                    <PoleBattle numbers={numbers} letters={letters} setSelectedSquare={setSelectedSquare} motion={motion} isPolePlayer={false}/>
-                    <label style={{display: 'flex', justifyContent: 'center', marginTop: '20px', fontSize: '20px'}}>Поле противника</label>
+                    <PoleBattle numbers={numbers} letters={letters} setSelectedSquare={setSelectedSquare}
+                                motion={motion} isPolePlayer={false}/>
+                    <label style={{display: 'flex', justifyContent: 'center', marginTop: '20px', fontSize: '20px'}}>Поле
+                        противника</label>
                 </div>
 
             </div>
