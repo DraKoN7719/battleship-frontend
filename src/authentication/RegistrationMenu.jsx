@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import axios from "axios";
 import {useLocation, useNavigate} from "react-router-dom";
-import classes from "../style/Authentication.css";
+import classes from "../styles/Authentication.css";
 
 const RegistrationMenu = function () {
     const [inputUserLogin, setInputUserLogin] = useState("");

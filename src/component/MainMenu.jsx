@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Link} from 'react-router-dom'
 import LoginMenu from "../authentication/LoginMenu";
-import classes from '../style/MainMenu.css'
+import classes from '../styles/MainMenu.css'
 import {useSelector} from "react-redux";
 
 
