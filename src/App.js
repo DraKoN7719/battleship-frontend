@@ -10,7 +10,7 @@ function App() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user'))
+        const user = JSON.parse(sessionStorage.getItem('user'))
         if(user?.auth){
             console.log(isAuth)
             dispatch(authenticationUser(user.id, user.login));
