@@ -3,10 +3,11 @@ import classes from "../styles/LoadGame.css";
 import classes2 from "../styles/UserPlacement.css";
 import axios from "axios";
 import {Link} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 const LoadGame = () => {
 
-    const [idUser, setIdUser] = useState(1);
+    const idUser = useSelector(state => state.user.idUser);
     const [listSaveGame, setListSaveGame] = useState();
 
     useEffect(()=>{

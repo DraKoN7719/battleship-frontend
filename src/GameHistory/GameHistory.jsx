@@ -3,9 +3,10 @@ import classes from "../styles/GameHistory.css";
 import classes2 from "../styles/UserPlacement.css";
 import {Link} from "react-router-dom";
 import axios from "axios";
+import {useSelector} from "react-redux";
 
 const GameHistory = () => {
-    const [idUser, setIdUser] = useState(1);
+    const idUser = useSelector(state => state.user.idUser);
     const [gameHistory, setGameHistory] = useState();
 
     useEffect(()=>{
