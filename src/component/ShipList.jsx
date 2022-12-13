@@ -24,7 +24,7 @@ const ShipList = ({shipList, setSelectedShip, setCoordinates, setShipList, setMo
             <PlacementStrategy setCoordinates={setCoordinates} shipList={shipList} setShipList={setShipList}/>
             <Link  to="/" className='button_back'>Назад</Link>
             {(shipList.filter(x => x.count === 0)).length  === 4 ?
-                (isBattleThePlayer ? <Link to="/battleTheComputer" state={coordinates} className='button_battle' >В бой</Link>:
+                (isBattleThePlayer ? <Link to="/lobbyOnlineGame" state={coordinates} className='button_battle' >В бой</Link>:
                     <Link className='button_battle' onClick={() => setModalActive(true)}>В бой</Link>) :
                 <Link onClick={() => alert('Расставьте все корабли на поле!!!')} className='button_battle'>В бой</Link>
             }
