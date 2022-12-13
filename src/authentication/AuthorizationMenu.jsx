@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 import axios from "axios";
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import classes from "../styles/Authentication.css";
-import RegistrationMenu from "./RegistrationMenu";
 import {useDispatch} from "react-redux";
 import {authenticationUser} from "../Store/userReducer";
 
@@ -17,11 +15,16 @@ const AuthorizationMenu = function () {
             "login": inputUserLogin,
             "password": inputUserPassword
         }).then(res => {
-            if(res.data) {
+            if (res.data.status === "SUCCESS") {
                 getIdUser();
                 navigate(`/`)
+            } else {
+                if (res.data.status === "NOT_FOUND") {
+                    window.alert("Такого пользователя не существует");
+                } else if (res.data.status === "INVALID_PASSWORD") {
+                    window.alert("Неверный пароль");
+                }
             }
-                else window.alert("Такого пользователя не существует");
         }).catch((error) => {
             console.error(error.response);
         })
@@ -31,8 +34,8 @@ const AuthorizationMenu = function () {
         axios.get(`http://localhost:8080/api/authentication/${inputUserLogin}`)
             .then(res => {
             if(res.data) {
-                dispatch(authenticationUser(res.data, inputUserLogin));
-                localStorage.setItem('user', JSON.stringify({auth: true, id: res.data, login: inputUserLogin}))
+                dispatch(authenticationUser(res.data.id, inputUserLogin));
+                sessionStorage.setItem('user', JSON.stringify({auth: true, id: res.data.id, login: inputUserLogin}))
             }
         }).catch((error) => {
             console.error(error.response);

@@ -9,7 +9,7 @@ const LoginMenu = function (props) {
 
     function logout() {
         dispatch(logoutUser());
-        localStorage.removeItem('user')
+        sessionStorage.removeItem('user')
     }
 
     return (

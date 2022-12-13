@@ -3,12 +3,13 @@ import axios from "axios";
 import {Link} from "react-router-dom";
 import Modal from "../Modal/Modal";
 import classes from "../styles/LoadModal.css"
+import {useSelector} from "react-redux";
 
 const SaveAndLoad = ({placement, shipList, setCoordinates}) => {
     const [nameSave, setNameSave] = useState();
     const [modalActive, setModalActive] = useState(false);
     const [listPlacement, setListPlacement] = useState();
-    const [idUser, setIdUser] = useState(4);
+    const idUser = useSelector(state => state.user.idUser);
 
     function getListPlacement() {
         axios.get(`http://localhost:8080/api/placement/${idUser}`
@@ -17,7 +18,6 @@ const SaveAndLoad = ({placement, shipList, setCoordinates}) => {
         }).catch((error) => {
             console.error(error.response);
         })
-        return undefined
     }
 
     useEffect(()=>{
@@ -27,7 +27,7 @@ const SaveAndLoad = ({placement, shipList, setCoordinates}) => {
     function savePlacement(e) {
         e.stopPropagation()
         axios.post(`http://localhost:8080/api/placement`, {
-            "userId": "4",
+            "userId": idUser,
             "placementName": nameSave,
             "placement": placement
         }).catch((error) => {

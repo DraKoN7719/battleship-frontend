@@ -22,7 +22,15 @@ const RegistrationMenu = function () {
         axios.put(`http://localhost:8080/api/registration`, {
             "login": inputUserLogin,
             "password": inputUserPassword
-        }).then(navigate(`/authorization`))
+        }).then(res => {
+            if (res.data.status === "SUCCESS") {
+                navigate(`/authorization`);
+            } else if (res.data.status === "INVALID_LOGIN") {
+                window.alert("Пользователь с таким логином уже существует");
+            }
+        }).catch((error) => {
+            console.error(error.response);
+        })
 
     }
     return (
