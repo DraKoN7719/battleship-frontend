@@ -4,13 +4,14 @@ import classes from "../styles/UserPlacement.css"
 import PoleUserPlacement from "./PoleUserPlacement";
 import {renderShips, renderShipsBattle, renderShipsListPlacement} from "../component/RenderShips";
 import {Link} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 const ListUserPlacement = () => {
     //Добавить очистку поля после удаления расстановки
     //Добавить подсветку выбранной расстановки
     const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     const letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'];
-    const [idUser, setIdUser] = useState(1);
+    const idUser = useSelector(state => state.user.idUser);
     const [listPlacement, setListPlacement] = useState();
     const [selectedSquare, setSelectedSquare] = useState()
     const [coordinates, setCoordinates] = useState([
