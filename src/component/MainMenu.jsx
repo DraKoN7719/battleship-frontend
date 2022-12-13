@@ -15,10 +15,10 @@ const MainMenu = function () {
         <div>
             <LoginMenu data ={{name : loginUser}} />
             <div className={'MainMenu'}>
-                <Link  to="/PrepareForBattle" className={'MenuText'}>
+                <Link  to="/PrepareForBattle" state={true} className={'MenuText'}>
                    Играть онлайн
                 </Link>
-                <Link to="/PrepareForBattle" className={'MenuText'}>
+                <Link to="/PrepareForBattle" state={false} className={'MenuText'}>
                    Играть с компьютером
                 </Link>
                 <Link to="/listUserPlacement" className={'MenuText'}>

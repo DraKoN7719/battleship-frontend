@@ -12,7 +12,6 @@ function App() {
     useEffect(() => {
         const user = JSON.parse(sessionStorage.getItem('user'))
         if(user?.auth){
-            console.log(isAuth)
             dispatch(authenticationUser(user.id, user.login));
         }
     }, [])

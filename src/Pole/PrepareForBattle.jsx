@@ -6,7 +6,7 @@ import classess from "../styles/modal.css"
 import Ship from "../component/Ship";
 import {renderShips} from "../component/RenderShips";
 import Modal from "../Modal/Modal";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 
 const PrepareForBattle = function () {
     //Изменить удаление кораблей на правую либо левую кнопку мыши
@@ -32,8 +32,9 @@ const PrepareForBattle = function () {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ]);
+    const location = useLocation()
     const [invertedShip, setInvertedShip] = useState(false)
-    const [isBattleThePlayer, setIsBattleThePlayer] = useState(false) // проверка на игру с игроком
+    const [isBattleThePlayer, setIsBattleThePlayer] = useState(location.state) // проверка на игру с игроком
     const [countOrientation, setCountOrientation] = useState(0)
     const [selectedShip, setSelectedShip] = useState()
     const [selectedSquare, setSelectedSquare] = useState() // координаты куда пользователь пытается поставить корабль
