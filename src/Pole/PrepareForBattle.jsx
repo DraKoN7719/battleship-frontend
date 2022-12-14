@@ -47,6 +47,7 @@ const PrepareForBattle = function () {
         setMousePos(mouse);
     };
 
+
     function getShip(e) {
         if (selectedShip !== undefined && shipList[selectedShip - 1].count > 0 && e.button === 0) {
             let copy = Object.assign([], shipList);
