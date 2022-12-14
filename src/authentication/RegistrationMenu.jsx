@@ -27,6 +27,8 @@ const RegistrationMenu = function () {
                 navigate(`/authorization`);
             } else if (res.data.status === "INVALID_LOGIN") {
                 window.alert("Пользователь с таким логином уже существует");
+            } else if(res.data.status === "INVALID_LOGIN_REGISTRATION") {
+                window.alert("Невозможно создать пользователя с таким логином");
             }
         }).catch((error) => {
             console.error(error.response);

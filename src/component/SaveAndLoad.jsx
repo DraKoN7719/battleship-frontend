@@ -26,19 +26,41 @@ const SaveAndLoad = ({placement, shipList, setCoordinates}) => {
 
     function savePlacement(e) {
         e.stopPropagation()
-        axios.post(`http://localhost:8080/api/placement`, {
+        axios.post(`http://localhost:8080/api/placement?isOverwrite=false`, {
             "userId": idUser,
             "placementName": nameSave,
             "placement": placement
         }).then(
-            () => {
-                alert("Расстановка сохранена");
-                document.getElementById("nameSave").value = "";
-                setNameSave("");
+            res => {
+                if (res.data) {
+                    if (window.confirm("Расстановка с таким именем уже существует, вы действительно хотите перезаписать?")) {
+                        axios.post(`http://localhost:8080/api/placement?isOverwrite=true`, {
+                            "userId": idUser,
+                            "placementName": nameSave,
+                            "placement": placement
+                        }).then(
+                            res => {
+                                if(!res.data) {
+                                    alert("Расстановка сохранена");
+                                    document.getElementById("nameSave").value = "";
+                                    setNameSave("");
+                                }
+
+                            })
+                            .catch((error) => {
+                                window.alert("Что-то пошло не так");
+                                console.error(error.response);
+                            })
+                    }
+                } else {
+                    alert("Расстановка сохранена");
+                    document.getElementById("nameSave").value = "";
+                    setNameSave("");
+                }
             })
             .catch((error) => {
-            window.alert("Расстановка с таким именем уже существует");
-            console.error(error.response);
+                window.alert("Расстановка с таким именем уже существует");
+                console.error(error.response);
         })
         setTimeout(()=> getListPlacement(), 100);
 

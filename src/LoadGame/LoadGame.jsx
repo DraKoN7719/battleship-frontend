@@ -15,7 +15,7 @@ const LoadGame = () => {
     }, [])
 
     function getListSaveGame() {
-        axios.get(`http://localhost:8080/api/loadGame/${idUser}`
+        axios.get(`http://localhost:8080/api/saved-game/${idUser}`
         ).then(res => {
             if(res.data) setListSaveGame(res.data);
         }).catch((error) => {

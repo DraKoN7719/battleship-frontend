@@ -14,7 +14,7 @@ const GameHistory = () => {
     }, [])
 
     function getGameHistory() {
-        axios.get(`http://localhost:8080/api/gameHistory/${idUser}`
+        axios.get(`http://localhost:8080/api/history-game/${idUser}`
         ).then(res => {
             if(res.data) setGameHistory(res.data);
         }).catch((error) => {
@@ -36,12 +36,12 @@ const GameHistory = () => {
                     <table>
                         <tbody>
                         {gameHistory && gameHistory.map(game =>
-                            <tr style={game.result === 1 ? {background: "#58ee65"} : {background: "#f37878"}}>
+                            <tr style={game.result === idUser ? {background: "#58ee65"} : {background: "#f37878"}}>
                                 <td>
-                                    {game.player2}
+                                    {game.login2}
                                 </td>
                                 <td>
-                                    {game.result === 1 ? "Победа" : "Поражение"}
+                                    {game.result === idUser ? "Победа" : "Поражение"}
                                 </td>
                             </tr>
                         )}

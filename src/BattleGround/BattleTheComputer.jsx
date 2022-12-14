@@ -123,7 +123,7 @@ const BattleTheComputer = () => {
     function setArea(x, y, pole) {
         setBorder(x, y, pole);
         let n = 1;
-        while (checkBounds(x + n, y) && (pole[x + n][y] === 1) || pole[x + n][y] === -1) {
+        while (checkBounds(x + n, y) && (pole[x + n][y] === 1 || pole[x + n][y] === -1)) {
             setBorder(x + n, y, pole)
             n++
         }
