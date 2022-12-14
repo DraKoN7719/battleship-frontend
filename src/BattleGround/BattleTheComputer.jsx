@@ -4,8 +4,8 @@ import classes from '../styles/PoleBattle.css'
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {renderShipsBattle} from "../component/RenderShips";
 import {renderShipsBattleComp} from "../component/RenderShips";
+import {renderShipsBattlePlayer} from "../component/RenderShips";
 import axios from "axios";
-
 
 
 const BattleTheComputer = () => {
@@ -32,10 +32,20 @@ const BattleTheComputer = () => {
     const [selectedSquare, setSelectedSquare] = useState({x: null, y: null}) //координаты попадания
     const [selectedComp, setSelectedComp] = useState({x: null, y: null});//координаты выстрела оппонента
     const [motion, setMotion] = useState(true)
-    const cc = useState();
 
-    function  send() {
-         axios.post(`http://localhost:8080/api/shoot`, {
+    let id =1 //todo айди добавить
+    function sendPolePlayer() {
+        axios.post(`http://localhost:8080/api/setPolePlayer`,
+            {polePlayer,id},
+        ).then(res => {
+            //todo обработка ошибок мб шо то не сохранилось и тд
+        }).catch((error) => {
+            console.error(error.response);
+        })
+    }
+
+    function send() {
+        axios.post(`http://localhost:8080/api/shoot`, {
             "x": selectedSquare.y,
             "y": selectedSquare.x
         }).then(res => {
@@ -59,7 +69,13 @@ const BattleTheComputer = () => {
                 setArea(selectedSquare.y, selectedSquare.x, poleComputer2)
                 setPoleComputer(poleComputer2);
             }
-             compTurn()
+            else if (res.data === 3) {
+                const poleComputer2 = poleComputer.slice();
+                poleComputer2[selectedSquare.y][selectedSquare.x] = 1;
+                alert("Вы выйграли")
+                setPoleComputer(poleComputer2);
+            }
+            compTurn()
 
         }).catch((error) => {
             console.error(error.response);
@@ -68,63 +84,93 @@ const BattleTheComputer = () => {
     }
 
     function getCompTurn() {
-        axios.post(`http://localhost:8080/api/shootComp`, {}).then(res => {
+        axios.post(`http://localhost:8080/api/shootComp`, {id}).then(res => {
             let x = res.data.x;
             let y = res.data.y;
 
             const polePlayer2 = polePlayer.slice();
             if (polePlayer2[x][y] === 1) {
                 polePlayer2[x][y] = -1;
+                if(isDead(polePlayer2,x,y)) setArea(x,y,polePlayer2)
+                setPolePlayer(polePlayer2);
             }
 
             if (polePlayer2[x][y] === 0) {
                 motion2 = true;
                 setMotion(motion => true)
-                polePlayer2[x][y] = -2;
+                polePlayer2[x][y] = 2;
             }
-
-            if (polePlayer2[x][y] >= 2) {
-                motion2 = true;
-                setMotion(motion => true)
-                polePlayer2[x][y] = -2;
-            }
-            sleep(500)
             setPolePlayer(polePlayer2);
-            if(motion2 === false) getCompTurn()
+            sleep(500)
+            if (motion2 === false) getCompTurn()
             else setMotion(motion2)
 
+            if(isCompWin(polePlayer2))
+                alert("Вы проиграли")
         }).catch((error) => {
             console.error(error.response);
         })
 
     }
 
+    function isCompWin(pole){
+        for (let i = 0; i < 10; i++)
+            for (let j = 0; j < 10; j++)
+                if(pole[i][j] === 1) return false;
+        return  true;
+    }
 
     function setArea(x, y, pole) {
         setBorder(x, y, pole);
         let n = 1;
-        while (checkBounds(x + n, y) && pole[x + n][y] === 1) {
+        while (checkBounds(x + n, y) && (pole[x + n][y] === 1) || pole[x + n][y] === -1) {
             setBorder(x + n, y, pole)
             n++
         }
         n = 1;
 
-        while (checkBounds(x - n, y) && pole[x - n][y] === 1) {
+        while (checkBounds(x - n, y) && (pole[x - n][y] === 1 || pole[x - n][y] === -1)) {
             setBorder(x - n, y, pole)
             n++
         }
         n = 1;
 
-        while (checkBounds(x, y + n) && pole[x][y + n] === 1) {
+        while (checkBounds(x, y + n) && (pole[x][y + n] === 1 || pole[x][y + n] === -1)) {
             setBorder(x, y + n, pole)
             n++
         }
         n = 1;
 
-        while (checkBounds(x, y - n) && pole[x][y - n] === 1) {
+        while (checkBounds(x, y - n) && (pole[x][y - n] === 1 || pole[x][y - n] === -1)) {
             setBorder(x, y - n, pole)
             n++
         }
+    }
+    function isDead(pole, x, y) {
+        let n = 1;
+        while (checkBounds(x + n, y) && pole[x + n][y] === -1) {
+            n++;
+        }
+        if (checkBounds(x + n, y) && pole[x + n][y] === 1) return false;
+        n = 1;
+
+        while (checkBounds(x - n, y) && pole[x - n][y] === -1) {
+            n++;
+        }
+        if (checkBounds(x - n, y) && pole[x - n][y] === 1) return false;
+        n = 1;
+
+        while (checkBounds(x, y + n) && pole[x][y + n] === -1) {
+            n++;
+        }
+        if (checkBounds(x, y + n) && pole[x][y + n] === 1) return false;
+        n = 1;
+
+        while (checkBounds(x, y - n) && pole[x][y - n] === -1) {
+            n++;
+        }
+        if (checkBounds(x, y - n) && pole[x][y - n] === 1) return false;
+        return true;
     }
 
     function checkBounds(x, y) {
@@ -143,19 +189,25 @@ const BattleTheComputer = () => {
         if (checkBounds(x - 1, y + 1) && pole[x - 1][y + 1] === 0) pole[x - 1][y + 1] = 2
     }
 
-
-
-
     useEffect(() => {
-        if (motion === true)
-            if (selectedSquare.x !== null && poleComputer[selectedSquare.y][selectedSquare.x] !== 1 && poleComputer[selectedSquare.y][selectedSquare.x] !== 2) {
-               send();
+        if (selectedSquare.x !== null && poleComputer[selectedSquare.y][selectedSquare.x] !== 1 && poleComputer[selectedSquare.y][selectedSquare.x] !== 2&& poleComputer[selectedSquare.y][selectedSquare.x] !== -1) {
+            if (motion === true)
+                send();
+        } else {
+            if (selectedSquare.x == null) {
+                const polePlayer2 = polePlayer.slice();
+                for (let i = 0; i < 10; i++)
+                    for (let j = 0; j < 10; j++)
+                        if (polePlayer2[i][j] >= 2) polePlayer2[i][j] = 0;
+                setPolePlayer(polePlayer2)
+                sendPolePlayer()
             }
+        }
     }, [selectedSquare]);
 
-    function compTurn(){
-        if(motion2 === false)
-        getCompTurn()
+    function compTurn() {
+        if (motion2 === false)
+            getCompTurn()
     }
 
     function sleep(milliseconds) {
@@ -172,9 +224,7 @@ const BattleTheComputer = () => {
 
     useEffect(() => {
         renderShipsBattleComp(poleComputer)
-        //
     }, [poleComputer]);
-
 
 
     return (

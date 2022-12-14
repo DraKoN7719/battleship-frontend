@@ -19,13 +19,11 @@ export function renderShips(coordinates) {
 
 export function renderShipsBattle(coordinates) {
     let mas = document.getElementsByClassName('squareBattle')
+    console.log(coordinates)
     for (let i = 0; i < 10; i++)
         for (let j = 0; j < 10; j++) {
             if (coordinates[i][j] === 1) {
                 mas[i * 10 + j].className += ' squarePlacement1';
-            }
-            if (coordinates[i][j] === 2 || coordinates[i][j] === 4 || coordinates[i][j] === 6 || coordinates[i][j] === 8) {
-                mas[i * 10 + j].className += ' squarePlacement2';
             }
             if (coordinates[i][j] === 0) {
                 mas[i * 10 + j].style = ' background-color: white; border-color: black;'
@@ -34,7 +32,7 @@ export function renderShipsBattle(coordinates) {
             if (coordinates[i][j] === -1) {
                 mas[i * 10 + j].style = ' background-color: red;'
             }
-            if (coordinates[i][j] === -2) {
+            if (coordinates[i][j] === 2) {
                 mas[i * 10 + j].style = ' background-color: grey;'
             }
 
@@ -49,11 +47,12 @@ export function renderShipsBattle(coordinates) {
                 if (coordinates[i][j] === 1) {
                     mas[i * 10 + j].style = ' background-color: red;'
                 }
-                if (coordinates[i][j] === 2 || coordinates[i][j] === 4 || coordinates[i][j] === 6 || coordinates[i][j] === 8) {
+                if (coordinates[i][j] === 2) {
                     mas[i * 10 + j].style = ' background-color: grey;'
                 }
                 if (coordinates[i][j] === 0) {
                     mas[i * 10 + j].style = ' background-color: white;'
                 }
             }
-    }
+}
+
