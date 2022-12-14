@@ -19,7 +19,6 @@ export function renderShips(coordinates) {
 
 export function renderShipsBattle(coordinates) {
     let mas = document.getElementsByClassName('squareBattle')
-    console.log(coordinates)
     for (let i = 0; i < 10; i++)
         for (let j = 0; j < 10; j++) {
             if (coordinates[i][j] === 1) {
@@ -41,7 +40,6 @@ export function renderShipsBattle(coordinates) {
 
     export function renderShipsBattleComp(coordinates) {
         let mas = document.getElementsByClassName('square')
-
         for (let i = 0; i < 10; i++)
             for (let j = 0; j < 10; j++) {
                 if (coordinates[i][j] === 1) {
