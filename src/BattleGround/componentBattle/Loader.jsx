@@ -3,6 +3,8 @@ import classes from "../../styles/Loader.css"
 import {Link} from "react-router-dom";
 
 const Loader = ({polePlayer,isWaitPlayer}) => {
+
+
     return (
         <div className={!isWaitPlayer ? "modal_loader": "modal_loader active"}>
             <div className="loader">

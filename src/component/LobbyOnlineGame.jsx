@@ -3,14 +3,20 @@ import {Link, useLocation, useNavigate} from "react-router-dom";
 import classes from "../styles/lobbyOnlineGame.css"
 import axios from "axios";
 import {v4 as uuidv4} from 'uuid';
+import {useDispatch, useSelector} from "react-redux";
+import {closeConnect_User} from "../Store/STOMPReducer";
 
 const LobbyOnlineGame = () => {
     const [listGame, setListGame] = useState();
     const location = useLocation()
     const [coordinates, setCoordinates] = useState(location.state);
     const router = useNavigate();
+    const dispatch = useDispatch()
+    const stompClient = useSelector(state => state.connect.stompClient)
+    const game = useSelector(state => state.connect.game)
 
     useEffect(() =>{
+        disconnect()
         axios.get(`http://localhost:8080/api/getListGame`)
             .then(res => {
                 if(res.data) {
@@ -21,6 +27,17 @@ const LobbyOnlineGame = () => {
         })
     }, [])
 
+
+    function disconnect() {
+        if (stompClient != null) {
+            stompClient.send("/app/game",{}, JSON.stringify({...game,
+                status: "DISCONNECTION"
+            }))
+            stompClient.disconnect();
+            dispatch(closeConnect_User())
+            console.log("Disconnected");
+        }
+    }
 
     return (
         <div className="lobby">

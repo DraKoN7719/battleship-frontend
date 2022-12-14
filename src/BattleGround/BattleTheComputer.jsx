@@ -6,6 +6,7 @@ import {renderShipsBattle} from "../component/RenderShips";
 import {renderShipsBattleComp} from "../component/RenderShips";
 import {renderShipsBattlePlayer} from "../component/RenderShips";
 import axios from "axios";
+import {checkBounds, setArea} from "./componentBattle/DrawingBorders";
 
 
 const BattleTheComputer = () => {
@@ -120,32 +121,7 @@ const BattleTheComputer = () => {
         return  true;
     }
 
-    function setArea(x, y, pole) {
-        setBorder(x, y, pole);
-        let n = 1;
-        while (checkBounds(x + n, y) && (pole[x + n][y] === 1 || pole[x + n][y] === -1)) {
-            setBorder(x + n, y, pole)
-            n++
-        }
-        n = 1;
 
-        while (checkBounds(x - n, y) && (pole[x - n][y] === 1 || pole[x - n][y] === -1)) {
-            setBorder(x - n, y, pole)
-            n++
-        }
-        n = 1;
-
-        while (checkBounds(x, y + n) && (pole[x][y + n] === 1 || pole[x][y + n] === -1)) {
-            setBorder(x, y + n, pole)
-            n++
-        }
-        n = 1;
-
-        while (checkBounds(x, y - n) && (pole[x][y - n] === 1 || pole[x][y - n] === -1)) {
-            setBorder(x, y - n, pole)
-            n++
-        }
-    }
     function isDead(pole, x, y) {
         let n = 1;
         while (checkBounds(x + n, y) && pole[x + n][y] === -1) {
@@ -173,21 +149,7 @@ const BattleTheComputer = () => {
         return true;
     }
 
-    function checkBounds(x, y) {
-        return x < 10 && x > -1 && y < 10 && y > -1
-    }
 
-    function setBorder(x, y, pole) {
-        if (checkBounds(x + 1, y) && pole[x + 1][y] === 0) pole[x + 1][y] = 2
-        if (checkBounds(x - 1, y) && pole[x - 1][y] === 0) pole[x - 1][y] = 2
-        if (checkBounds(x, y - 1) && pole[x][y - 1] === 0) pole[x][y - 1] = 2
-        if (checkBounds(x, y + 1) && pole[x][y + 1] === 0) pole[x][y + 1] = 2
-
-        if (checkBounds(x + 1, y + 1) && pole[x + 1][y + 1] === 0) pole[x + 1][y + 1] = 2
-        if (checkBounds(x - 1, y - 1) && pole[x - 1][y - 1] === 0) pole[x - 1][y - 1] = 2
-        if (checkBounds(x + 1, y - 1) && pole[x + 1][y - 1] === 0) pole[x + 1][y - 1] = 2
-        if (checkBounds(x - 1, y + 1) && pole[x - 1][y + 1] === 0) pole[x - 1][y + 1] = 2
-    }
 
     useEffect(() => {
         if (selectedSquare.x !== null && poleComputer[selectedSquare.y][selectedSquare.x] !== 1 && poleComputer[selectedSquare.y][selectedSquare.x] !== 2&& poleComputer[selectedSquare.y][selectedSquare.x] !== -1) {

@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {useLocation, useNavigate, useParams} from "react-router-dom";
-import {renderShipsBattle} from "../component/RenderShips";
+import {renderShipsBattle, renderShipsBattleComp} from "../component/RenderShips";
 import PoleBattle from "./componentBattle/PoleBattle";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import SockJS from "sockjs-client";
 import {over} from "stompjs";
 import Loader from "./componentBattle/Loader";
+import {joinUser} from "../Store/STOMPReducer";
+import {setArea} from "./componentBattle/DrawingBorders";
 
 let stompClient = null;
 const BattleThePlayer = () => {
@@ -13,7 +15,14 @@ const BattleThePlayer = () => {
     const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     const letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'];
     const location = useLocation()
-    const [polePlayer, setPolePlayer] = useState(location.state.coordinates);
+    const dispatch = useDispatch()
+    const [polePlayer, setPolePlayer] = useState(() => {
+        const polePlayer2 = location.state.coordinates;
+        for (let i = 0; i < 10; i++)
+            for (let j = 0; j < 10; j++)
+                if (polePlayer2[i][j] >= 2) polePlayer2[i][j] = 0;
+        return polePlayer2
+    });
     const idUser = useSelector((state) => state.user.idUser)
     const [isCreator, setIsCreator] = useState(location.state.isCreator);
     const [poleTheEnemy, setPoleTheEnemy] = useState([
@@ -30,93 +39,149 @@ const BattleThePlayer = () => {
     ]);
     const [selectedSquare, setSelectedSquare] = useState() //координаты попадания
     const [isWaitPlayer, setIsWaitPlayer] = useState(false)
-    const [motion, setMotion] = useState(true)
-
+    const [motion, setMotion] = useState(() => !!isCreator)
+    const game = {
+        id: params.id,
+        player1: null,
+        player2: null,
+        resultGame: null,
+        fieldPlayer1: null,
+        fieldPlayer2: null,
+        x: null,
+        y: null,
+        status: ""
+    }
 
     useEffect(() => {
         renderShipsBattle(polePlayer)
     }, [polePlayer]);
 
-    //text websocket
+    useEffect(() => {
+        console.log(poleTheEnemy)
+        renderShipsBattleComp(poleTheEnemy)
+    }, [poleTheEnemy]);
 
     useEffect(() => {
         isCreator && setIsWaitPlayer(true);
-        connect();
-        setTimeout(()=> send(), 300);
+        if(stompClient == null){
+            connect();
+            setTimeout(()=> send(), 300);
+        }
     }, []);
 
+    useEffect(() => {
+        //из-за афк убивает!!
+        selectedSquare && userHit(selectedSquare.y, selectedSquare.x)
+    }, [selectedSquare])
+
+    function userHit(y, x) {
+        isCreator ?
+            stompClient.send("/app/game",{}, JSON.stringify({...game,
+                player1: idUser,
+                x: y,
+                y: x,
+                status: "MOTION"
+            }))
+            :
+            stompClient.send("/app/game",{}, JSON.stringify({...game,
+                player2: idUser,
+                x: y,
+                y: x,
+                status: "MOTION"
+            }));
+    }
 
     const connect = ()=>{
         let socket = new SockJS("http://localhost:8080/ws");
         stompClient = over(socket);
         stompClient.connect({}, onConnected, onError);
+        dispatch(joinUser(stompClient, isCreator ?
+                {...game, player1: idUser,}
+                :
+                {...game, player2: idUser,}
+        ))
     }
 
     const onConnected = () => {
-         /*stompClient.subscribe(
-             "/topic/user", onMessageReceived)*/
         stompClient.subscribe(
-            "/user/" + params.id + "/queue/messages", onMessageReceived)
+            "/user/" + params.id + "/game", onMessageReceived)
     }
 
     const onMessageReceived = (msg) => {
-        let game = JSON.parse(msg.body)
-        console.log(game);
-        switch (game.status) {
-            case "JOIN_PLAYER_2": {
-                setIsWaitPlayer(false);
-                break;
+        let game1 = JSON.parse(msg.body)
+        const pole1 = polePlayer.slice();
+        const pole2 = poleTheEnemy.slice();
+            switch (game1.status) {
+                case "JOIN_PLAYER_2": {
+                    setIsWaitPlayer(false);
+                    break;
+                }
+                case "ПОПАЛ": {
+                    if(idUser === game1.id) {
+                        pole2[game1.x][game1.y] = 1;
+                        setPoleTheEnemy(pole2);
+                        setMotion(true)
+                    }
+                    else {
+                        pole1[game1.x][game1.y] = -1;
+                        setPolePlayer(pole1);
+                        setMotion(false)
+                    }
+                    break;
+                }
+                case "МИМО": {
+                    if(idUser === game1.id) {
+                        pole2[game1.x][game1.y] = 2;
+                        setPoleTheEnemy(pole2);
+                        setMotion(false)
+                    }
+                    else {
+                        pole1[game1.x][game1.y] = 2;
+                        setPolePlayer(pole1);
+                        setMotion(true)
+                    }
+                    break;
+                }
+                case "УБИЛ": {
+                    if(idUser === game1.id) {
+                        pole2[game1.x][game1.y] = 1;
+                        setArea(game1.x, game1.y, pole2)
+                        setPoleTheEnemy(pole2);
+                        setMotion(true)
+                    }
+                    else {
+                        pole1[game1.x][game1.y] = -1;
+                        setArea(game1.x, game1.y, pole1)
+                        setPolePlayer(pole1);
+                        setMotion(false)
+                    }
+                    break;
+                }
             }
-        }
     };
     
     const send=()=>{
-        let game;
         isCreator ?
-        game = {
-            id: params.id,
+        stompClient.send("/app/game",{}, JSON.stringify({...game,
             player1: idUser,
-            player2: null,
-            resultGame: null,
-            fieldPlayer1: parseMatrixToString(),
-            fieldPlayer2: null,
+            fieldPlayer1: polePlayer,
             status: "JOIN"
-        }
+        }))
         :
-        game = {
-            id: params.id,
-            player1: null,
+        stompClient.send("/app/game",{}, JSON.stringify({...game,
             player2: idUser,
-            resultGame: null,
-            fieldPlayer1: null,
-            fieldPlayer2: parseMatrixToString(),
+            fieldPlayer2: polePlayer,
             status: "JOIN_PLAYER_2"
-        }
-        /*stompClient.send("/app/test",{}, JSON.stringify(game));*/
-        stompClient.send("/app/chat",{}, JSON.stringify(game));
-    }
-
-    function parseMatrixToString() {
-        let result = "";
-        for(let i = 0; i < 10; i++){
-            for(let j = 0; j < 10; j++){
-                  (i === 9 && j === 9) ? result+=polePlayer[i][j] : result+=polePlayer[i][j]+","
-            }
-        }
-        return result;
+        }));
     }
 
     const onError = (err) => {
         console.log(err);
     }
 
-    function disconnect() {
-        if (stompClient != null) {
-            stompClient.close();
-            stompClient.disconnect();
-        }
-        console.log("Disconnected");
-    }
+
+
+
     return (
         <div>
             <Loader polePlayer={polePlayer} isWaitPlayer={isWaitPlayer}/>
