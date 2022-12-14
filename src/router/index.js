@@ -11,9 +11,6 @@ import LobbyOnlineGame from "../component/LobbyOnlineGame";
 
 
 export const privateRoutes = [
-
-]
-export const publicRoutes = [
     {path: '/', element: MainMenu, exact: true},
     {path: '/PrepareForBattle', element: PrepareForBattle, exact: true},
     {path: '/battleTheComputer', element: BattleTheComputer, exact: true},
@@ -21,7 +18,9 @@ export const publicRoutes = [
     {path: '/battleThePlayer/:id', element: BattleThePlayer, exact: true},
     {path: '/loadGame', element: LoadGame, exact: true},
     {path: '/historyGame', element: GameHistory, exact: true},
-    {path: '/listUserPlacement', element: ListUserPlacement, exact: true},
+    {path: '/listUserPlacement', element: ListUserPlacement, exact: true}
+]
+export const publicRoutes = [
     {path: '/authorization', element: AuthorizationMenu, exact: true},
     {path: '/registration', element: RegistrationMenu, exact: true}
 ]
