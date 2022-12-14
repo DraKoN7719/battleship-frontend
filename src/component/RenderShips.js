@@ -56,3 +56,14 @@ export function renderShipsBattle(coordinates) {
             }
 }
 
+export function renderShipsListPlacement(coordinates) {
+    let mas =  document.getElementsByClassName('detected')
+    for(let i = 0 ; i < 10; i++)
+        for(let j = 0 ; j < 10; j++) {
+            if (coordinates[i][j] === 1) {
+                mas[i * 10 + j].className = 'detected squarePlacement1';
+            } else {
+                mas[i * 10 + j].className = 'detected squarePlacement3'
+            }
+        }
+}
