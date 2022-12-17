@@ -86,28 +86,32 @@ const SaveAndLoad = ({placement, shipList, setCoordinates}) => {
             </div>
             <button className='load saveAndLoad_button' onClick={() => setModalActive(true)}>Загрузить</button>
             <Modal active={modalActive} setActive={setModalActive} style={'modal__content_2'}>
-                <div className="load-scroll-table">
-                    <table style={{border: '3px solid black', background: '#a9a7a7'}}>
-                        <thead>
-                        <tr>
-                            <th>Название расстановки</th>
-                        </tr>
-                        </thead>
-                    </table>
-                    <div className="load-scroll-table-body">
-                        <table>
-                            <tbody>
-                            {listPlacement && listPlacement.map(place =>
-                                <tr>
-                                    <td onClick={() => removeCountShipList(place)}>
-                                        {place.placementName}
-                                    </td>
-                                </tr>
-                            )}
-                            </tbody>
+                {listPlacement && listPlacement.length > 0 ?
+                    <div className="load-scroll-table">
+                        <table style={{border: '3px solid black', background: '#a9a7a7'}}>
+                            <thead>
+                            <tr>
+                                <th>Название расстановки</th>
+                            </tr>
+                            </thead>
                         </table>
+                        <div className="load-scroll-table-body">
+                            <table>
+                                <tbody>
+                                {listPlacement && listPlacement.map(place =>
+                                    <tr>
+                                        <td onClick={() => removeCountShipList(place)}>
+                                            {place.placementName}
+                                        </td>
+                                    </tr>
+                                )}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
+                    :
+                    <h1>Нет сохраненных расстановок</h1>
+                }
             </Modal>
         </div>
     );

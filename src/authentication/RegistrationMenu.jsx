@@ -2,12 +2,14 @@ import React, {useState} from 'react';
 import axios from "axios";
 import {useLocation, useNavigate} from "react-router-dom";
 import classes from "../styles/Authentication.css";
+import ModalInfo from "../Modal/ModalInfo";
 
 const RegistrationMenu = function () {
     const [inputUserLogin, setInputUserLogin] = useState("");
     const [inputUserPassword, setInputUserPassword] = useState("");
     const [inputUserPassword2, setInputUserPassword2] = useState("");
     const navigate = useNavigate();
+    const [modalActive, setModalActive] = useState(false);
     function createUser() {
         if ((inputUserLogin === undefined || inputUserLogin === "")
             && (inputUserPassword === undefined || inputUserPassword === "")
@@ -47,6 +49,10 @@ const RegistrationMenu = function () {
                       type="password" value={inputUserPassword2} placeholder="Повторите пароль" maxLength={12}
                              onChange={(event) => setInputUserPassword2(event.target.value)}/></p>
             <p><input className='registration_button' type="button" value="Зарегистрироваться" onClick={createUser}/></p>
+            <div className="divImg" style={{paddingTop: "7%"}}>
+                <img className="Menu_img" src =  {require ('../styles/info.png')} onClick={() => setModalActive(true)}/>
+                <ModalInfo modalActive={modalActive} setModalActive={setModalActive}/>
+            </div>
         </div>
     )
 }

@@ -3,12 +3,14 @@ import axios from "axios";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {authenticationUser} from "../Store/userReducer";
+import ModalInfo from "../Modal/ModalInfo";
 
 const AuthorizationMenu = function () {
     const dispatch = useDispatch()
     const [inputUserLogin, setInputUserLogin] = useState("");
     const [inputUserPassword, setInputUserPassword] = useState("");
     const navigate = useNavigate();
+    const [modalActive, setModalActive] = useState(false);
 
     function authorization() {
         axios.post(`http://localhost:8080/api/authorization`, {
@@ -58,6 +60,10 @@ const AuthorizationMenu = function () {
                 Зарегистрироваться
             </Link>
             </p>
+            <div className="divImg" style={{paddingTop: "7%"}}>
+                <img className="Menu_img" src =  {require ('../styles/info.png')} onClick={() => setModalActive(true)}/>
+                <ModalInfo modalActive={modalActive} setModalActive={setModalActive}/>
+            </div>
         </div>
     )
 }

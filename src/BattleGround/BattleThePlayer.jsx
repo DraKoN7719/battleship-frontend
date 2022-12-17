@@ -8,6 +8,7 @@ import {over} from "stompjs";
 import Loader from "./componentBattle/Loader";
 import {joinUser} from "../Store/STOMPReducer";
 import {setArea} from "./componentBattle/DrawingBorders";
+import axios from "axios";
 
 let stompClient = null;
 const BattleThePlayer = () => {
@@ -157,6 +158,22 @@ const BattleThePlayer = () => {
                     }
                     break;
                 }
+                case "ИТОГ": {
+                    if(idUser === game1.id) {
+                        pole2[game1.x][game1.y] = 1;
+                        setArea(game1.x, game1.y, pole2)
+                        setPoleTheEnemy(pole2);
+                        setMotion(true)
+                        addHistoryGame()
+                    }
+                    else {
+                        pole1[game1.x][game1.y] = -1;
+                        setArea(game1.x, game1.y, pole1)
+                        setPolePlayer(pole1);
+                        setMotion(false)
+                    }
+                    break;
+                }
             }
     };
     
@@ -179,7 +196,17 @@ const BattleThePlayer = () => {
         console.log(err);
     }
 
-
+    function addHistoryGame() {
+        axios.post(`http://localhost:8080/api/saveGameHistory/`, {
+            params: {
+                idGame: params.id,
+                idUser: idUser
+            }
+        })
+            .catch((error) => {
+            console.error(error.response);
+        })
+    }
 
 
     return (
