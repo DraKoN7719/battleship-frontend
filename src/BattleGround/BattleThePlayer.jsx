@@ -9,6 +9,7 @@ import Loader from "./componentBattle/Loader";
 import {joinUser} from "../Store/STOMPReducer";
 import {setArea} from "./componentBattle/DrawingBorders";
 import axios from "axios";
+import Timer from "./componentBattle/Timer";
 
 let stompClient = null;
 const BattleThePlayer = () => {
@@ -40,6 +41,8 @@ const BattleThePlayer = () => {
     ]);
     const [selectedSquare, setSelectedSquare] = useState() //координаты попадания
     const [isWaitPlayer, setIsWaitPlayer] = useState(false)
+    const [startTimer, setStartTimer] = useState(false)
+    const [timer, setTimer] = useState(120);
     const [motion, setMotion] = useState(() => !!isCreator)
     const game = {
         id: params.id,
@@ -72,7 +75,10 @@ const BattleThePlayer = () => {
 
     useEffect(() => {
         //из-за афк убивает!!
-        selectedSquare && userHit(selectedSquare.y, selectedSquare.x)
+        if(selectedSquare && poleTheEnemy[selectedSquare.y][selectedSquare.x] === 0){
+            userHit(selectedSquare.y, selectedSquare.x);
+            setSelectedSquare(undefined);
+        }
     }, [selectedSquare])
 
     function userHit(y, x) {
@@ -115,6 +121,7 @@ const BattleThePlayer = () => {
             switch (game1.status) {
                 case "JOIN_PLAYER_2": {
                     setIsWaitPlayer(false);
+                    setStartTimer(() => true);
                     break;
                 }
                 case "ПОПАЛ": {
@@ -122,11 +129,13 @@ const BattleThePlayer = () => {
                         pole2[game1.x][game1.y] = 1;
                         setPoleTheEnemy(pole2);
                         setMotion(true)
+                        setTimer(120)
                     }
                     else {
                         pole1[game1.x][game1.y] = -1;
                         setPolePlayer(pole1);
                         setMotion(false)
+                        setTimer(120)
                     }
                     break;
                 }
@@ -135,11 +144,13 @@ const BattleThePlayer = () => {
                         pole2[game1.x][game1.y] = 2;
                         setPoleTheEnemy(pole2);
                         setMotion(false)
+                        setTimer(120)
                     }
                     else {
                         pole1[game1.x][game1.y] = 2;
                         setPolePlayer(pole1);
                         setMotion(true)
+                        setTimer(120)
                     }
                     break;
                 }
@@ -149,12 +160,14 @@ const BattleThePlayer = () => {
                         setArea(game1.x, game1.y, pole2)
                         setPoleTheEnemy(pole2);
                         setMotion(true)
+                        setTimer(120)
                     }
                     else {
                         pole1[game1.x][game1.y] = -1;
                         setArea(game1.x, game1.y, pole1)
                         setPolePlayer(pole1);
                         setMotion(false)
+                        setTimer(120)
                     }
                     break;
                 }
@@ -162,15 +175,32 @@ const BattleThePlayer = () => {
                     if(idUser === game1.id) {
                         pole2[game1.x][game1.y] = 1;
                         setArea(game1.x, game1.y, pole2)
-                        setPoleTheEnemy(pole2);
-                        setMotion(true)
+                        setPoleTheEnemy(() => pole2);
+                        setMotion(() => true)
                         addHistoryGame()
+                        setStartTimer(() => false)
+                        alert("Вы победили")
                     }
                     else {
                         pole1[game1.x][game1.y] = -1;
                         setArea(game1.x, game1.y, pole1)
-                        setPolePlayer(pole1);
-                        setMotion(false)
+                        setPolePlayer(() => pole1);
+                        setMotion(() => false)
+                        setStartTimer(() => false)
+                        alert("Вы проиграли")
+                    }
+                    break;
+                }
+                case "DISCONNECTION": {
+                    if(idUser === game1.id) {
+                        addHistoryGame()
+                        alert("Вы победили")
+                        setStartTimer(false)
+                    }
+                    else {
+                        addHistoryGame()
+                        alert("Вы победили")
+                        setStartTimer(false)
                     }
                     break;
                 }
@@ -211,6 +241,7 @@ const BattleThePlayer = () => {
 
     return (
         <div>
+            <Timer start={startTimer} timer={timer} setTimer={setTimer}/>
             <Loader polePlayer={polePlayer} isWaitPlayer={isWaitPlayer}/>
             <div className='poleBattle'>
                     <div>

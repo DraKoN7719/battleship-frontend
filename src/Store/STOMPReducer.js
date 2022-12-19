@@ -21,16 +21,16 @@ export const STOMPReducer = (state = defaultState, action) => {
             return {...state, stompClient: action.stompClient, game: action.game};
         case CLOSE_CONNECT:
             return {...state, stompClient: null, game: {
-                        id: null,
-                        player1: null,
-                        player2: null,
-                        resultGame: null,
-                        fieldPlayer1: null,
-                        fieldPlayer2: null,
-                        x: null,
-                        y: null,
-                        status: ""
-                    }};
+                    id: null,
+                    player1: null,
+                    player2: null,
+                    resultGame: null,
+                    fieldPlayer1: null,
+                    fieldPlayer2: null,
+                    x: null,
+                    y: null,
+                    status: ""
+                }};
         default:
             return state
     }
