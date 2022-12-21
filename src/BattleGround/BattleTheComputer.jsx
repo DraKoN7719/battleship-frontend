@@ -221,7 +221,7 @@ const BattleTheComputer = () => {
             alert(timer === 0 ? "Время закончилось, вы проиграли" : "Вы проиграли");
         } else if (win === false) {
             endGame();
-            alert("Вы выиграли");
+            alert("Вы победили");
         }
     }, [win]);
 

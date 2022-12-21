@@ -16,7 +16,11 @@ const LobbyOnlineGame = () => {
     const game = useSelector(state => state.connect.game)
 
     useEffect(() =>{
-        disconnect()
+        disconnect();
+        getListGame();
+    }, [])
+
+    function getListGame() {
         axios.get(`http://${window.location.hostname}:8080/api/getListGame`)
             .then(res => {
                 if(res.data) {
@@ -25,7 +29,7 @@ const LobbyOnlineGame = () => {
             }).catch((error) => {
             console.error(error.response);
         })
-    }, [])
+    }
 
     function disconnect() {
         if (stompClient != null) {
@@ -44,7 +48,7 @@ const LobbyOnlineGame = () => {
                 <table style={{border: '3px solid black', background: '#a9a7a7'}}>
                     <thead>
                     <tr>
-                        <th>Логин противника</th>
+                        <th>ID игры<button className='reload' style={{marginLeft: 'auto'}} onClick={() => getListGame()}>Обновить</button></th>
                     </tr>
                     </thead>
                 </table>
