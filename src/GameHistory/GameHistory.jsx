@@ -14,7 +14,7 @@ const GameHistory = () => {
     }, [])
 
     function getGameHistory() {
-        axios.get(`http://localhost:8080/api/history-game/${idUser}`
+        axios.get(`http://${window.location.hostname}:8080/api/history-game/${idUser}`
         ).then(res => {
             if(res.data) setGameHistory(res.data);
         }).catch((error) => {

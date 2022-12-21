@@ -14,7 +14,7 @@ const PlacementStrategy = ({setCoordinates, shipList, setShipList}) => {
     }*/
 
     function shoresStrategy() {
-        axios.get(`http://localhost:8080/api/placement/shores`)
+        axios.get(`http://${window.location.hostname}:8080/api/placement/shores`)
             .then(res => {
                 if(res.data){
                     setCoordinates(res.data);
@@ -26,7 +26,7 @@ const PlacementStrategy = ({setCoordinates, shipList, setShipList}) => {
     }
 
     function randomStrategy() {
-        axios.get(`http://localhost:8080/api/placement/random`)
+        axios.get(`http://${window.location.hostname}:8080/api/placement/random`)
             .then(res => {
                 if(res.data){
                     setCoordinates(res.data);
@@ -42,7 +42,7 @@ const PlacementStrategy = ({setCoordinates, shipList, setShipList}) => {
     }
 
     function halfFieldStrategy() {
-        axios.get(`http://localhost:8080/api/placement/halfField`)
+        axios.get(`http://${window.location.hostname}:8080/api/placement/halfField`)
             .then(res => {
                 if(res.data){
                     setCoordinates(res.data);

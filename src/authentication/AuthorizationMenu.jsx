@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import axios from "axios";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {authenticationUser} from "../Store/userReducer";
 import ModalInfo from "../Modal/ModalInfo";
@@ -13,7 +13,7 @@ const AuthorizationMenu = function () {
     const [modalActive, setModalActive] = useState(false);
 
     function authorization() {
-        axios.post(`http://localhost:8080/api/authorization`, {
+        axios.post(`http://${window.location.hostname}:8080/api/authorization`, {
             "login": inputUserLogin,
             "password": inputUserPassword
         }).then(res => {
@@ -22,9 +22,9 @@ const AuthorizationMenu = function () {
                 navigate(`/`)
             } else {
                 if (res.data.status === "NOT_FOUND") {
-                    window.alert("Такого пользователя не существует");
+                    alert("Такого пользователя не существует");
                 } else if (res.data.status === "INVALID_PASSWORD") {
-                    window.alert("Неверный пароль");
+                    alert("Неверный пароль");
                 }
             }
         }).catch((error) => {
@@ -33,7 +33,7 @@ const AuthorizationMenu = function () {
     }
 
     function getIdUser() {
-        axios.get(`http://localhost:8080/api/authentication/${inputUserLogin}`)
+        axios.get(`http://${window.location.hostname}:8080/api/authentication/${inputUserLogin}`)
             .then(res => {
             if(res.data) {
                 dispatch(authenticationUser(res.data.id, inputUserLogin));

@@ -13,7 +13,7 @@ import LobbyOnlineGame from "../component/LobbyOnlineGame";
 export const privateRoutes = [
     {path: '/', element: MainMenu, exact: true},
     {path: '/PrepareForBattle', element: PrepareForBattle, exact: true},
-    {path: '/battleTheComputer', element: BattleTheComputer, exact: true},
+    {path: '/battleTheComputer/:id', element: BattleTheComputer, exact: true},
     {path: '/lobbyOnlineGame', element: LobbyOnlineGame, exact: true},
     {path: '/battleThePlayer/:id', element: BattleThePlayer, exact: true},
     {path: '/loadGame', element: LoadGame, exact: true},

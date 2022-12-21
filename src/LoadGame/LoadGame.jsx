@@ -10,17 +10,32 @@ const LoadGame = () => {
     const idUser = useSelector(state => state.user.idUser);
     const [listSaveGame, setListSaveGame] = useState();
 
-    useEffect(()=>{
+    useEffect(() => {
         getListSaveGame()
     }, [])
 
     function getListSaveGame() {
-        axios.get(`http://localhost:8080/api/saved-game/${idUser}`
+        axios.get(`http://${window.location.hostname}:8080/api/saved-game/${idUser}`
         ).then(res => {
-            if(res.data) setListSaveGame(res.data);
+            if (res.data) setListSaveGame(res.data);
         }).catch((error) => {
             console.error(error.response);
         })
+    }
+
+    function loadGame(gameId) {
+        axios.get(`http://${window.location.hostname}:8080/api/load-game/${gameId}`);
+    }
+
+    function deleteSavedGame(gameId, gameName) {
+        if (window.confirm("Вы действительно хотите удалить игру " + gameName + "?")) {
+            axios.delete(`http://${window.location.hostname}:8080/api/saved-game/${gameId}`)
+                .then(() => {
+                    getListSaveGame();
+                    setTimeout(() => alert("Игра " + gameName + " успешно удалена!"), 100);
+                })
+                .catch(() => alert("Что-то пошло не так."));
+        }
     }
 
     return (
@@ -33,14 +48,27 @@ const LoadGame = () => {
                     </tr>
                     </thead>
                 </table>
-                <div className="loadGame-scroll-table-body" /*style={gameHistory.length > 12 ? {marginRight: "calc(-1 * (80.4vw - 100%))"} : {}}*/>
+                <div
+                    className="loadGame-scroll-table-body" /*style={gameHistory.length > 12 ? {marginRight: "calc(-1 * (80.4vw - 100%))"} : {}}*/>
                     <table>
                         <tbody>
                         {listSaveGame && listSaveGame.map(game =>
                             <tr>
                                 <td style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                                     {game.gameName}
-                                    <Link  to="/battleTheComputer" state={game.userField}  className='loadGame-button-load'>Загрузить</Link>
+                                    <div className="loadGame-line">
+                                            <Link to={"/battleTheComputer/" + game.id} state={{
+                                                field: game.userField,
+                                                bot: game.botId,
+                                                id: game.id,
+                                                botField: game.botField,
+                                                motion: game.turn,
+                                                isLoad: true
+                                            }} className='loadGame-button-load'
+                                                  onClick={() => loadGame(game.id)}>Загрузить</Link>
+                                            <img className='img' onClick={() => deleteSavedGame(game.id, game.gameName)}
+                                                 src={require("../styles/close.png")}/>
+                                    </div>
                                 </td>
                             </tr>
                         )}
@@ -48,7 +76,7 @@ const LoadGame = () => {
                     </table>
                 </div>
             </div>
-            <Link  to="/" className='button_back_list_placement'>Назад</Link>
+            <Link to="/" className='button_back_list_placement'>Назад</Link>
         </div>
     );
 

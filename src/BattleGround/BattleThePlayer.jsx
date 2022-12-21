@@ -7,7 +7,7 @@ import SockJS from "sockjs-client";
 import {over} from "stompjs";
 import Loader from "./componentBattle/Loader";
 import {joinUser} from "../Store/STOMPReducer";
-import {setArea} from "./componentBattle/DrawingBorders";
+import {setArea, setDead} from "./componentBattle/DrawingBorders";
 import axios from "axios";
 import Timer from "./componentBattle/Timer";
 
@@ -99,7 +99,7 @@ const BattleThePlayer = () => {
     }
 
     const connect = ()=>{
-        let socket = new SockJS("http://localhost:8080/ws");
+        let socket = new SockJS(`http://${window.location.hostname}:8080/ws`);
         stompClient = over(socket);
         stompClient.connect({}, onConnected, onError);
         dispatch(joinUser(stompClient, isCreator ?
@@ -118,6 +118,7 @@ const BattleThePlayer = () => {
         let game1 = JSON.parse(msg.body)
         const pole1 = polePlayer.slice();
         const pole2 = poleTheEnemy.slice();
+        console.log(game1.status);
             switch (game1.status) {
                 case "JOIN_PLAYER_2": {
                     setIsWaitPlayer(false);
@@ -126,13 +127,13 @@ const BattleThePlayer = () => {
                 }
                 case "ПОПАЛ": {
                     if(idUser === game1.id) {
-                        pole2[game1.x][game1.y] = 1;
+                        pole2[game1.x][game1.y] = 2;
                         setPoleTheEnemy(pole2);
                         setMotion(true)
                         setTimer(120)
                     }
                     else {
-                        pole1[game1.x][game1.y] = -1;
+                        pole1[game1.x][game1.y] = 2;
                         setPolePlayer(pole1);
                         setMotion(false)
                         setTimer(120)
@@ -141,13 +142,13 @@ const BattleThePlayer = () => {
                 }
                 case "МИМО": {
                     if(idUser === game1.id) {
-                        pole2[game1.x][game1.y] = 2;
+                        pole2[game1.x][game1.y] = -1;
                         setPoleTheEnemy(pole2);
                         setMotion(false)
                         setTimer(120)
                     }
                     else {
-                        pole1[game1.x][game1.y] = 2;
+                        pole1[game1.x][game1.y] = -1;
                         setPolePlayer(pole1);
                         setMotion(true)
                         setTimer(120)
@@ -156,14 +157,16 @@ const BattleThePlayer = () => {
                 }
                 case "УБИЛ": {
                     if(idUser === game1.id) {
-                        pole2[game1.x][game1.y] = 1;
+                        pole2[game1.x][game1.y] = 3;
+                        setDead(pole2, game1.x, game1.y)
                         setArea(game1.x, game1.y, pole2)
                         setPoleTheEnemy(pole2);
                         setMotion(true)
                         setTimer(120)
                     }
                     else {
-                        pole1[game1.x][game1.y] = -1;
+                        pole1[game1.x][game1.y] = 3;
+                        setDead(pole1, game1.x, game1.y)
                         setArea(game1.x, game1.y, pole1)
                         setPolePlayer(pole1);
                         setMotion(false)
@@ -173,21 +176,23 @@ const BattleThePlayer = () => {
                 }
                 case "ИТОГ": {
                     if(idUser === game1.id) {
-                        pole2[game1.x][game1.y] = 1;
+                        pole2[game1.x][game1.y] = 3;
+                        setDead(pole2, game1.x, game1.y)
                         setArea(game1.x, game1.y, pole2)
                         setPoleTheEnemy(() => pole2);
                         setMotion(() => true)
                         addHistoryGame()
                         setStartTimer(() => false)
-                        alert("Вы победили")
+                        setTimeout(() => alert("Вы победили"), 200);
                     }
                     else {
-                        pole1[game1.x][game1.y] = -1;
+                        pole1[game1.x][game1.y] = 3;
+                        setDead(pole1, game1.x, game1.y)
                         setArea(game1.x, game1.y, pole1)
                         setPolePlayer(() => pole1);
                         setMotion(() => false)
                         setStartTimer(() => false)
-                        alert("Вы проиграли")
+                        setTimeout(() => alert("Вы проиграли"), 200);
                     }
                     break;
                 }
@@ -227,7 +232,7 @@ const BattleThePlayer = () => {
     }
 
     function addHistoryGame() {
-        axios.post(`http://localhost:8080/api/saveGameHistory/`, {
+        axios.post(`http://${window.location.hostname}:8080/api/saveGameHistory/`, {
             params: {
                 idGame: params.id,
                 idUser: idUser

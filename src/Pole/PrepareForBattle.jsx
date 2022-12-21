@@ -6,6 +6,7 @@ import classess from "../styles/modal.css"
 import Ship from "../component/Ship";
 import {renderShips} from "../component/RenderShips";
 import Modal from "../Modal/Modal";
+import {v4 as uuidv4} from 'uuid';
 import {Link, useLocation} from "react-router-dom";
 
 const PrepareForBattle = function () {
@@ -40,6 +41,7 @@ const PrepareForBattle = function () {
     const [selectedSquare, setSelectedSquare] = useState() // координаты куда пользователь пытается поставить корабль
     const [mousePos, setMousePos] = useState({x: 0, y: 0});
     const [activeShip, setActiveShip] = useState() // какой корабль взял пользователь
+    const idGame = uuidv4();
     const handleMouse = (event) => {
         const mouse = {};
         mouse.x = event.clientX;
@@ -213,77 +215,77 @@ const PrepareForBattle = function () {
         if (coordinates[x][y] === 1) {
             coordinates[x][y] = 0;
             shipId += 1
-            deleteArea(x, y,'all');
+            deleteArea(x, y, 'all');
             let n = 1;
-            while (checkNext(x + n, y,'down')) {
+            while (checkNext(x + n, y, 'down')) {
                 shipId += 1;
                 n++;
             }
             n = 1;
-            while (checkNext(x - n, y,'up')) {
+            while (checkNext(x - n, y, 'up')) {
                 shipId += 1;
                 n++;
             }
             n = 1;
-            while (checkNext(x, y + n,'right')) {
+            while (checkNext(x, y + n, 'right')) {
                 shipId += 1;
                 n++;
             }
             n = 1;
-            while (checkNext(x, y - n,'left')) {
+            while (checkNext(x, y - n, 'left')) {
                 shipId += 1;
                 n++;
             }
 
-            switch (shipId){
+            switch (shipId) {
                 case 4:
-                    shipList[0].count = shipList[0].count+1
+                    shipList[0].count = shipList[0].count + 1
                     break
                 case 3:
-                    shipList[1].count = shipList[1].count+1
+                    shipList[1].count = shipList[1].count + 1
                     break
                 case 2:
-                    shipList[2].count = shipList[2].count+1
+                    shipList[2].count = shipList[2].count + 1
                     break
                 case 1:
-                    shipList[3].count = shipList[3].count+1
+                    shipList[3].count = shipList[3].count + 1
                     break
             }
             renderShips(coordinates)
         }
     }
 
-    function checkNext(x, y,pos) {
+    function checkNext(x, y, pos) {
         if (checkBounds(x, y) && coordinates[x][y] === 1) {
             coordinates[x][y] = 0;
-            deleteArea(x, y,pos);
+            deleteArea(x, y, pos);
             return true
         }
         return false
     }
 
-    function deleteArea(x, y,pos) {
-        if(pos === 'right'){
+    function deleteArea(x, y, pos) {
+        if (pos === 'right') {
             if (checkBounds(x + 1, y + 1) && coordinates[x + 1][y + 1] >= 2) coordinates[x + 1][y + 1] -= 2;
             if (checkBounds(x - 1, y + 1) && coordinates[x - 1][y + 1] >= 2) coordinates[x - 1][y + 1] -= 2;
             if (checkBounds(x, y + 1) && coordinates[x][y + 1] >= 2) coordinates[x][y + 1] -= 2;
         }
-        if(pos === 'up'){
+        if (pos === 'up') {
             if (checkBounds(x - 1, y) && coordinates[x - 1][y] >= 2) coordinates[x - 1][y] -= 2;
             if (checkBounds(x - 1, y - 1) && coordinates[x - 1][y - 1] >= 2) coordinates[x - 1][y - 1] -= 2;
             if (checkBounds(x - 1, y + 1) && coordinates[x - 1][y + 1] >= 2) coordinates[x - 1][y + 1] -= 2;
         }
-        if(pos === 'down'){
+        if (pos === 'down') {
             if (checkBounds(x + 1, y) && coordinates[x + 1][y] >= 2) coordinates[x + 1][y] -= 2;
             if (checkBounds(x + 1, y - 1) && coordinates[x + 1][y - 1] >= 2) coordinates[x + 1][y - 1] -= 2;
             if (checkBounds(x + 1, y + 1) && coordinates[x + 1][y + 1] >= 2) coordinates[x + 1][y + 1] -= 2;
         }
-        if(pos === 'left'){
+        if (pos === 'left') {
             if (checkBounds(x, y - 1) && coordinates[x][y - 1] >= 2) coordinates[x][y - 1] -= 2;
             if (checkBounds(x + 1, y - 1) && coordinates[x + 1][y - 1] >= 2) coordinates[x + 1][y - 1] -= 2;
             if (checkBounds(x - 1, y - 1) && coordinates[x - 1][y - 1] >= 2) coordinates[x - 1][y - 1] -= 2;
         }
-        if(pos === 'all') {
+        if (pos === 'all') {
             if (checkBounds(x + 1, y) && coordinates[x + 1][y] >= 2) coordinates[x + 1][y] -= 2;
             if (checkBounds(x - 1, y) && coordinates[x - 1][y] >= 2) coordinates[x - 1][y] -= 2;
             if (checkBounds(x, y + 1) && coordinates[x][y + 1] >= 2) coordinates[x][y + 1] -= 2;
@@ -297,6 +299,20 @@ const PrepareForBattle = function () {
 
     function checkBounds(x, y) {
         return x < 10 && x > -1 && y < 10 && y > -1
+    }
+
+    function clearPlacement() {
+        const clearPlacement = [[]];
+        for (let i = 0; i < 10; i++) {
+            clearPlacement[i] = []
+            for (let j = 0; j < 10; j++)
+                if (coordinates[i][j] >= 2) {
+                    clearPlacement[i][j] = 0;
+                } else {
+                    clearPlacement[i][j] = coordinates[i][j];
+                }
+        }
+        return clearPlacement;
     }
 
     return (
@@ -320,9 +336,12 @@ const PrepareForBattle = function () {
             <Pole numbers={numbers} letters={letters} setSelectedSquare={setSelectedSquare} placement={coordinates}
                   shipList={shipList} setCoordinates={setCoordinates}/>
             <Modal active={modalActive} setActive={setModalActive} style={'modal__content'}>
-                <Link  to="/battleTheComputer" state={coordinates} className='modal__content__button'>Легкий</Link>
-                <Link  to="/battleTheComputer" state={coordinates} className='modal__content__button'>Средний</Link>
-                <Link  to="/battleTheComputer" state={coordinates} className='modal__content__button'>Сложный</Link>
+                <Link to={"/battleTheComputer/" + idGame} state={{field: clearPlacement(), bot: 1, id: idGame}}
+                      className='modal__content__button'>Легкий</Link>
+                <Link to={"/battleTheComputer/" + idGame} state={{field: clearPlacement(), bot: 2, id: idGame}}
+                      className='modal__content__button'>Средний</Link>
+                <Link to={"/battleTheComputer/" + idGame} state={{field: clearPlacement(), bot: 3, id: idGame}}
+                      className='modal__content__button'>Сложный</Link>
             </Modal>
         </div>
     )

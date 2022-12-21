@@ -12,7 +12,7 @@ const SaveAndLoad = ({placement, shipList, setCoordinates}) => {
     const idUser = useSelector(state => state.user.idUser);
 
     function getListPlacement() {
-        axios.get(`http://localhost:8080/api/placement/${idUser}`
+        axios.get(`http://${window.location.hostname}:8080/api/placement/${idUser}`
         ).then(res => {
             if(res.data) setListPlacement(res.data);
         }).catch((error) => {
@@ -26,7 +26,7 @@ const SaveAndLoad = ({placement, shipList, setCoordinates}) => {
 
     function savePlacement(e) {
         e.stopPropagation()
-        axios.post(`http://localhost:8080/api/placement?isOverwrite=false`, {
+        axios.post(`http://${window.location.hostname}:8080/api/placement?isOverwrite=false`, {
             "userId": idUser,
             "placementName": nameSave,
             "placement": placement
@@ -34,7 +34,7 @@ const SaveAndLoad = ({placement, shipList, setCoordinates}) => {
             res => {
                 if (res.data) {
                     if (window.confirm("Расстановка с таким именем уже существует, вы действительно хотите перезаписать?")) {
-                        axios.post(`http://localhost:8080/api/placement?isOverwrite=true`, {
+                        axios.post(`http://${window.location.hostname}:8080/api/placement?isOverwrite=true`, {
                             "userId": idUser,
                             "placementName": nameSave,
                             "placement": placement
@@ -48,7 +48,7 @@ const SaveAndLoad = ({placement, shipList, setCoordinates}) => {
 
                             })
                             .catch((error) => {
-                                window.alert("Что-то пошло не так");
+                                alert("Что-то пошло не так");
                                 console.error(error.response);
                             })
                     }
@@ -59,7 +59,7 @@ const SaveAndLoad = ({placement, shipList, setCoordinates}) => {
                 }
             })
             .catch((error) => {
-                window.alert("Расстановка с таким именем уже существует");
+                alert("Расстановка с таким именем уже существует");
                 console.error(error.response);
         })
         setTimeout(()=> getListPlacement(), 100);

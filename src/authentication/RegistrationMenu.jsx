@@ -14,23 +14,37 @@ const RegistrationMenu = function () {
         if ((inputUserLogin === undefined || inputUserLogin === "")
             && (inputUserPassword === undefined || inputUserPassword === "")
             && (inputUserPassword2 === undefined || inputUserPassword2 === "")) {
-            window.alert("Есть пустые поля");
+            alert("Есть пустые поля");
+            return;
+        }
+        if (inputUserLogin.length < 2) {
+            alert("Минимальная длина логина 2 символа");
+            return;
+        } else if (inputUserLogin.length > 12) {
+            alert("Максимальная длина логина 12 символов");
+            return;
+        }
+        if (inputUserPassword.length < 4) {
+            alert("Минимальная длина пароля 4 символа");
+            return;
+        } else if (inputUserLogin.length > 12) {
+            alert("Максимальная длина пароля 12 символов");
             return;
         }
         if (inputUserPassword !== inputUserPassword2) {
-            window.alert("Пароли не совпадают");
+            alert("Пароли не совпадают");
             return;
         }
-        axios.put(`http://localhost:8080/api/registration`, {
+        axios.put(`http://${window.location.hostname}:8080/api/registration`, {
             "login": inputUserLogin,
             "password": inputUserPassword
         }).then(res => {
             if (res.data.status === "SUCCESS") {
                 navigate(`/authorization`);
             } else if (res.data.status === "INVALID_LOGIN") {
-                window.alert("Пользователь с таким логином уже существует");
+                alert("Пользователь с таким логином уже существует");
             } else if(res.data.status === "INVALID_LOGIN_REGISTRATION") {
-                window.alert("Невозможно создать пользователя с таким логином");
+                alert("Невозможно создать пользователя с таким логином");
             }
         }).catch((error) => {
             console.error(error.response);

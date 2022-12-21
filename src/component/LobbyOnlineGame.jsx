@@ -17,7 +17,7 @@ const LobbyOnlineGame = () => {
 
     useEffect(() =>{
         disconnect()
-        axios.get(`http://localhost:8080/api/getListGame`)
+        axios.get(`http://${window.location.hostname}:8080/api/getListGame`)
             .then(res => {
                 if(res.data) {
                     setListGame(res.data)
@@ -26,7 +26,6 @@ const LobbyOnlineGame = () => {
             console.error(error.response);
         })
     }, [])
-
 
     function disconnect() {
         if (stompClient != null) {

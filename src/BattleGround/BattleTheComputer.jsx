@@ -1,23 +1,32 @@
 import React, {useEffect, useState} from 'react';
 import PoleBattle from "./componentBattle/PoleBattle";
-import classes from '../styles/PoleBattle.css'
-import {Link, useLocation, useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import {renderShipsBattle} from "../component/RenderShips";
 import {renderShipsBattleComp} from "../component/RenderShips";
-import {renderShipsBattlePlayer} from "../component/RenderShips";
 import axios from "axios";
-import {checkBounds, setArea} from "./componentBattle/DrawingBorders";
-
+import {isDead, setArea, setDead} from "./componentBattle/DrawingBorders";
+import Timer from "./componentBattle/Timer";
 
 const BattleTheComputer = () => {
-    const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-    const letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'];
+    const navigate = useNavigate();
     const location = useLocation()
-    const [polePlayer, setPolePlayer] = useState(location.state);
-    let motion2 = true
 
+    const idUser = JSON.parse(sessionStorage.getItem('user')).id;
+    const bot = location.state.bot;
+    let motion = location.state.motion ? location.state.motion === idUser : true;
+    let id = location.state.id;
 
-    const [poleComputer, setPoleComputer] = useState([
+    const [nameSave, setNameSave] = useState("");
+    const [timer, setTimer] = useState(120);
+    const [startTimer, setStartTimer] = useState(true);
+
+    const [isLoad, setIsLoad] = useState(!!location.state.isLoad);
+    const [arrow, setArrow] = useState(location.state.motion ? location.state.motion === idUser : true)
+    const [win, setWin] = useState(null)
+
+    const [selectedSquare, setSelectedSquare] = useState({x: null, y: null}) //координаты попадания
+    const [polePlayer, setPolePlayer] = useState(location.state.field);
+    const [poleComputer, setPoleComputer] = useState(location.state.botField ? location.state.botField : [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -30,17 +39,24 @@ const BattleTheComputer = () => {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ]);
 
-    const [selectedSquare, setSelectedSquare] = useState({x: null, y: null}) //координаты попадания
-    const [selectedComp, setSelectedComp] = useState({x: null, y: null});//координаты выстрела оппонента
-    const [motion, setMotion] = useState(true)
-    const [vin, setVin] = useState(null)
+    const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+    const letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'];
 
-    let id = 1 //todo айди добавить
-    let strat = 2;
+    function setMotion(change) {
+        motion = change;
+        setArrow(change)
+    }
 
     function sendPolePlayer() {
-        axios.post(`http://localhost:8080/api/setPolePlayer`,
-            {polePlayer, id},
+        axios.post(`http://${window.location.hostname}:8080/api/initialize-battle`,
+            {
+                "id": id,
+                "player1": idUser,
+                "player2": bot,
+                "fieldPlayer1": polePlayer,
+                "fieldPlayer2": null,
+                "turn": idUser
+            },
         ).then(res => {
             //todo обработка ошибок мб шо то не сохранилось и тд
         }).catch((error) => {
@@ -49,68 +65,85 @@ const BattleTheComputer = () => {
     }
 
     function send() {
-        axios.post(`http://localhost:8080/api/shoot`, {
-            "x": selectedSquare.y,
-            "y": selectedSquare.x
+        axios.post(`http://${window.location.hostname}:8080/api/shoot`, {
+            "gameId": id,
+            "shotAt": bot,
+            "coordinate": {
+                "x": selectedSquare.y,
+                "y": selectedSquare.x
+            }
         }).then(res => {
-            console.log(res.data)
+            setTimer(120);
             if (res.data === 1) console.log('Попал')
             if (res.data === 2) console.log('Убил')
             if (res.data === 0) console.log("мимо");
             if (res.data === 1) {
                 const poleComputer2 = poleComputer.slice();
-                poleComputer2[selectedSquare.y][selectedSquare.x] = 1;
+                poleComputer2[selectedSquare.y][selectedSquare.x] = 2;
                 setPoleComputer(poleComputer2);
             } else if (res.data === 0) {
                 const poleComputer2 = poleComputer.slice();
-                poleComputer2[selectedSquare.y][selectedSquare.x] = 2;
+                poleComputer2[selectedSquare.y][selectedSquare.x] = -1;
                 setPoleComputer(poleComputer2);
-                motion2 = false;
-                setMotion(motion => false)
+                setMotion(false);
             } else if (res.data === 2) {
                 const poleComputer2 = poleComputer.slice();
-                poleComputer2[selectedSquare.y][selectedSquare.x] = 1;
-                setArea(selectedSquare.y, selectedSquare.x, poleComputer2)
+                poleComputer2[selectedSquare.y][selectedSquare.x] = 3;
+                setDead(poleComputer2, selectedSquare.y, selectedSquare.x);
+                setArea(selectedSquare.y, selectedSquare.x, poleComputer2);
                 setPoleComputer(poleComputer2);
             } else if (res.data === 3) {
                 const poleComputer2 = poleComputer.slice();
-                poleComputer2[selectedSquare.y][selectedSquare.x] = 1;
+                poleComputer2[selectedSquare.y][selectedSquare.x] = 3;
+                setDead(poleComputer2, selectedSquare.y, selectedSquare.x);
+                setArea(selectedSquare.y, selectedSquare.x, poleComputer2)
                 setPoleComputer(poleComputer2);
-                setVin(false)
+                setStartTimer(false);
+                setTimeout(() => setWin(false), 100);
             }
-            compTurn()
-
+            if (win !== undefined) {
+                compTurn()
+            }
         }).catch((error) => {
             console.error(error.response);
         })
+    }
 
+    function compTurn() {
+        if (!motion) {
+            getCompTurn();
+        }
     }
 
     function getCompTurn() {
-        axios.post(`http://localhost:8080/api/shootComp`, {id, strat}).then(res => {
+        axios.get(`http://${window.location.hostname}:8080/api/shootComp/` + id).then(res => {
             let x = res.data.x;
             let y = res.data.y;
 
             const polePlayer2 = polePlayer.slice();
             if (polePlayer2[x][y] === 1) {
-                polePlayer2[x][y] = -1;
-                if (isDead(polePlayer2, x, y)) setArea(x, y, polePlayer2)
+                polePlayer2[x][y] = 2;
+                if (isDead(polePlayer2, x, y)) {
+                    setDead(polePlayer2, x, y);
+                    setArea(x, y, polePlayer2);
+                }
                 setPolePlayer(polePlayer2);
             }
 
             if (polePlayer2[x][y] === 0) {
-                motion2 = true;
-                setMotion(motion => true)
-                polePlayer2[x][y] = 2;
+                setMotion(true);
+                polePlayer2[x][y] = -1;
             }
             setPolePlayer(polePlayer2);
-            sleep(500)
-            if (motion2 === false) getCompTurn()
-            else setMotion(motion2)
+            sleep(300)
+            if (!motion) {
+                getCompTurn();
+            }
 
             if (isCompWin(polePlayer2)) {
-                setMotion(motion => false)
-                setVin(true)
+                setMotion(false);
+                setWin(true);
+                setStartTimer(false);
             }
         }).catch((error) => {
             console.error(error.response);
@@ -125,57 +158,6 @@ const BattleTheComputer = () => {
         return true;
     }
 
-
-    function isDead(pole, x, y) {
-        let n = 1;
-        while (checkBounds(x + n, y) && pole[x + n][y] === -1) {
-            n++;
-        }
-        if (checkBounds(x + n, y) && pole[x + n][y] === 1) return false;
-        n = 1;
-
-        while (checkBounds(x - n, y) && pole[x - n][y] === -1) {
-            n++;
-        }
-        if (checkBounds(x - n, y) && pole[x - n][y] === 1) return false;
-        n = 1;
-
-        while (checkBounds(x, y + n) && pole[x][y + n] === -1) {
-            n++;
-        }
-        if (checkBounds(x, y + n) && pole[x][y + n] === 1) return false;
-        n = 1;
-
-        while (checkBounds(x, y - n) && pole[x][y - n] === -1) {
-            n++;
-        }
-        if (checkBounds(x, y - n) && pole[x][y - n] === 1) return false;
-        return true;
-    }
-
-
-
-    useEffect(() => {
-        if (selectedSquare.x !== null && poleComputer[selectedSquare.y][selectedSquare.x] !== 1 && poleComputer[selectedSquare.y][selectedSquare.x] !== 2 && poleComputer[selectedSquare.y][selectedSquare.x] !== -1) {
-            if (motion === true)
-                send();
-        } else {
-            if (selectedSquare.x == null) {
-                const polePlayer2 = polePlayer.slice();
-                for (let i = 0; i < 10; i++)
-                    for (let j = 0; j < 10; j++)
-                        if (polePlayer2[i][j] >= 2) polePlayer2[i][j] = 0;
-                setPolePlayer(polePlayer2)
-                sendPolePlayer()
-            }
-        }
-    }, [selectedSquare]);
-
-    function compTurn() {
-        if (motion2 === false)
-            getCompTurn()
-    }
-
     function sleep(milliseconds) {
         const date = Date.now();
         let currentDate = null;
@@ -184,24 +166,126 @@ const BattleTheComputer = () => {
         } while (currentDate - date < milliseconds);
     }
 
+    function endGame() {
+        axios.post(`http://${window.location.hostname}:8080/api/history-game/save`, {
+            id: id,
+            player1: idUser,
+            player2: bot,
+            result: win ? bot : idUser
+        }).then( () => navigate(`/`));
+    }
+
     useEffect(() => {
-        renderShipsBattle(polePlayer)
+        if (isLoad) {
+            if (!motion) {
+                compTurn();
+            }
+            setIsLoad(false);
+            return;
+        }
+        if (selectedSquare.x !== null
+            && poleComputer[selectedSquare.y][selectedSquare.x] !== 1
+            && poleComputer[selectedSquare.y][selectedSquare.x] !== 2
+            && poleComputer[selectedSquare.y][selectedSquare.x] !== 3
+            && poleComputer[selectedSquare.y][selectedSquare.x] !== -1) {
+            if (motion) {
+                send();
+            } else {
+                compTurn();
+            }
+        } else {
+            if (selectedSquare.x == null) {
+                sendPolePlayer();
+            }
+        }
+    }, [selectedSquare]);
+
+    useEffect(() => {
+        renderShipsBattle(polePlayer);
     }, [polePlayer]);
 
     useEffect(() => {
-        if (vin === true)
-            alert("Вы проиграли")
-        if (vin === false)
-            alert("Вы выйграли")
-    }, [vin]);
+        if (win === true) {
+            endGame();
+            alert(timer === 0 ? "Время закончилось, вы проиграли" : "Вы проиграли");
+        } else if (win === false) {
+            endGame();
+            alert("Вы выиграли");
+        }
+    }, [win]);
 
     useEffect(() => {
         renderShipsBattleComp(poleComputer)
     }, [poleComputer]);
 
+    useEffect(() => {
+        if(timer === 0) {
+            setWin(true);
+        }
+    }, [timer])
+
+    function saveGame() {
+        if (nameSave !== "") {
+            axios.post(`http://${window.location.hostname}:8080/api/saved-game?isOverwrite=false`, {
+                "id": id,
+                "gameName": nameSave,
+                "userId": idUser,
+                "botId": bot,
+                "userField": polePlayer,
+                "botField": null,
+                "turn": motion ? idUser : bot
+            }).then(
+                res => {
+                    if (res.data) {
+                        if (window.confirm("Игра с таким именем уже существует, вы действительно хотите перезаписать?")) {
+                            axios.post(`http://${window.location.hostname}:8080/api/saved-game?isOverwrite=true`, {
+                                "id": id,
+                                "gameName": nameSave,
+                                "userId": idUser,
+                                "botId": bot,
+                                "userField": polePlayer,
+                                "botField": null,
+                                "turn": motion ? idUser : bot
+                            }).then(
+                                res => {
+                                    if (!res.data) {
+                                        alert("Игра сохранена");
+                                        document.getElementById("nameSave").value = "";
+                                        setNameSave("");
+                                    }
+
+                                })
+                                .catch((error) => {
+                                    alert("Что-то пошло не так");
+                                    console.error(error.response);
+                                })
+                        }
+                    } else {
+                        alert("Игра сохранена");
+                        document.getElementById("nameSave").value = "";
+                        setNameSave("");
+                    }
+                })
+                .catch((error) => {
+                    alert("Что-то пошло не так");
+                    console.error(error.response);
+                })
+        } else {
+            alert("Название игры для сохранения не может быть пустым!")
+        }
+    }
+
+    function getNameBot() {
+        switch (bot) {
+            case 1: return "Лёгкий ИИ";
+            case 2: return "Средний ИИ";
+            case 3: return "Сложный ИИ";
+        }
+    }
 
     return (
         <div>
+            <Timer start={startTimer} timer={timer} setTimer={setTimer}/>
             <div className='poleBattle'>
                 <div>
                     <PoleBattle numbers={numbers} letters={letters} isPolePlayer={true}/>
@@ -209,12 +293,27 @@ const BattleTheComputer = () => {
                         поле</label>
                 </div>
                 <div className='lineBattle'/>
-                <div className={motion ? 'arrow arrow-right' : 'arrow arrow-left'}/>
+                <div className={arrow ? 'arrow arrow-right' : 'arrow arrow-left'}/>
                 <div>
                     <PoleBattle numbers={numbers} letters={letters} setSelectedSquare={setSelectedSquare}
                                 motion={motion} isPolePlayer={false}/>
                     <label style={{display: 'flex', justifyContent: 'center', marginTop: '20px', fontSize: '20px'}}>Поле
-                        противника</label>
+                        противника {getNameBot()}</label>
+                    <div className='save'>
+                        <input id='nameSave' placeholder='Название сохранения'
+                               style={{
+                                   borderRadius: '20px',
+                                   width: '280px',
+                                   marginLeft: 'auto',
+                                   paddingLeft: '18px',
+                                   fontSize: '20px'
+                               }}
+                               onChange={(e) => setNameSave(e.target.value)}/>
+                        <button onClick={(e) => saveGame(e)}
+                                className='saveAndLoad_button'
+                                style={{marginLeft: 'auto'}}>Сохранить
+                        </button>
+                    </div>
                 </div>
 
             </div>

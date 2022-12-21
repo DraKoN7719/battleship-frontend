@@ -11,6 +11,10 @@
 
 }
 
+.loadGame-line {
+    display: flex;
+}
+
 .loadGame-scroll-table-body {
     height: 560px;
     overflow-x: auto;

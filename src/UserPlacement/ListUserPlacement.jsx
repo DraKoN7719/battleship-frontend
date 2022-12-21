@@ -29,7 +29,7 @@ const ListUserPlacement = () => {
 
 
    function getListPlacement() {
-        axios.get(`http://localhost:8080/api/placement/${idUser}`
+        axios.get(`http://${window.location.hostname}:8080/api/placement/${idUser}`
         ).then(res => {
             if(res.data) setListPlacement(res.data);
         }).catch((error) => {
@@ -47,7 +47,7 @@ const ListUserPlacement = () => {
 
     function deleteUserPlacement(placementName) {
         if(placementName !== undefined)
-            axios.delete(`http://localhost:8080/api/placement/${idUser}?placementName=${placementName}`)
+            axios.delete(`http://${window.location.hostname}:8080/api/placement/${idUser}?placementName=${placementName}`)
                 .then(() =>
                 getListPlacement()
             ).catch((error) => {
