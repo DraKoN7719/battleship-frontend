@@ -4,13 +4,21 @@ import {useLocation, useNavigate} from 'react-router-dom';
 import {renderShipsBattle} from "../component/RenderShips";
 import {renderShipsBattleComp} from "../component/RenderShips";
 import axios from "axios";
+import useSound from 'use-sound';
+import boopSfx from './vistrel.mp3';
 import {isDead, setArea, setDead} from "./componentBattle/DrawingBorders";
 import Timer from "./componentBattle/Timer";
 import Audio from "./componentBattle/Audio";
 
+
+
+
 const BattleTheComputer = () => {
     const navigate = useNavigate();
     const location = useLocation()
+    const [play] = useSound(
+        boopSfx
+    );
 
     const idUser = JSON.parse(sessionStorage.getItem('user')).id;
     const bot = location.state.bot;
@@ -66,6 +74,8 @@ const BattleTheComputer = () => {
     }
 
     function send() {
+        play()
+
         axios.post(`http://${window.location.hostname}:8080/api/shoot`, {
             "gameId": id,
             "shotAt": bot,
@@ -140,7 +150,7 @@ const BattleTheComputer = () => {
             if (!motion) {
                 getCompTurn();
             }
-
+            play()
             if (isCompWin(polePlayer2)) {
                 setMotion(false);
                 setWin(true);
