@@ -73,10 +73,10 @@ const BattleThePlayer = () => {
 
     useEffect(() => {
         isCreator && setIsWaitPlayer(true);
-        if(stompClient == null){
+        //if(stompClient == null){
             connect();
             setTimeout(()=> send(), 300);
-        }
+       // }
     }, []);
 
     useEffect(() => {
@@ -200,7 +200,7 @@ const BattleThePlayer = () => {
                         setMotion(() => true)
                         addHistoryGame()
                         setStartTimer(() => false)
-                        setTimeout(() => alert("Вы победили"), 200);
+                        alert("Вы победили");
                         navigate("/")
                     }
                     else {
@@ -210,7 +210,7 @@ const BattleThePlayer = () => {
                         setPolePlayer(() => pole1);
                         setMotion(() => false)
                         setStartTimer(() => false)
-                        setTimeout(() => alert("Вы проиграли"), 200);
+                        alert("Вы проиграли");
                         navigate("/")
                     }
                     break;
@@ -230,11 +230,16 @@ const BattleThePlayer = () => {
                     }
                     break;
                 }
+                case "ERROR": {
+                    isCreator ? alert("Вы уже в бою!") : alert("Нельзя присоединиться к самому себе!");
+                    navigate("/");
+                }
             }
         setListenerShot(() => false)
     };
-    
+
     const send=()=>{
+        console.log("CREATOR " + isCreator)
         isCreator ?
         stompClient.send("/app/game",{}, JSON.stringify({...game,
             player1: idUser,
@@ -276,6 +281,7 @@ const BattleThePlayer = () => {
                 alert("Вы победили")
                 setStartTimer(false)
             }
+            navigate(`/`);
         }
     }, [timer])
 
