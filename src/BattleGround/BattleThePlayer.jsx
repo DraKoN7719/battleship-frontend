@@ -10,6 +10,7 @@ import {joinUser} from "../Store/STOMPReducer";
 import {setArea, setDead} from "./componentBattle/DrawingBorders";
 import axios from "axios";
 import Timer from "./componentBattle/Timer";
+import Audio from "./componentBattle/Audio";
 
 let stompClient = null;
 const BattleThePlayer = () => {
@@ -18,6 +19,7 @@ const BattleThePlayer = () => {
     const letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'];
     const location = useLocation()
     const dispatch = useDispatch()
+    const navigate = useNavigate();
     const [polePlayer, setPolePlayer] = useState(() => {
         const polePlayer2 = location.state.coordinates;
         for (let i = 0; i < 10; i++)
@@ -184,6 +186,7 @@ const BattleThePlayer = () => {
                         addHistoryGame()
                         setStartTimer(() => false)
                         setTimeout(() => alert("Вы победили"), 200);
+                        navigate("/")
                     }
                     else {
                         pole1[game1.x][game1.y] = 3;
@@ -193,6 +196,7 @@ const BattleThePlayer = () => {
                         setMotion(() => false)
                         setStartTimer(() => false)
                         setTimeout(() => alert("Вы проиграли"), 200);
+                        navigate("/")
                     }
                     break;
                 }
@@ -201,11 +205,13 @@ const BattleThePlayer = () => {
                         addHistoryGame()
                         alert("Вы победили")
                         setStartTimer(false)
+                        navigate("/")
                     }
                     else {
                         addHistoryGame()
                         alert("Вы победили")
                         setStartTimer(false)
+                        navigate("/")
                     }
                     break;
                 }
@@ -232,7 +238,7 @@ const BattleThePlayer = () => {
     }
 
     function addHistoryGame() {
-        axios.post(`http://${window.location.hostname}:8080/api/saveGameHistory/`, {
+        axios.get(`http://${window.location.hostname}:8080/api/saveGameHistory`, {
             params: {
                 idGame: params.id,
                 idUser: idUser
@@ -243,10 +249,24 @@ const BattleThePlayer = () => {
         })
     }
 
+    useEffect(() => {
+        if(timer === 0) {
+            if(motion){
+                alert("Вы проиграли")
+                setStartTimer(false)
+            }
+            else{
+                addHistoryGame()
+                alert("Вы победили")
+                setStartTimer(false)
+            }
+        }
+    }, [timer])
 
     return (
         <div>
             <Timer start={startTimer} timer={timer} setTimer={setTimer}/>
+            <Audio/>
             <Loader polePlayer={polePlayer} isWaitPlayer={isWaitPlayer}/>
             <div className='poleBattle'>
                     <div>

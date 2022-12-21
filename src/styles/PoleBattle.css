@@ -43,3 +43,15 @@
     border: 1px solid;
 }
 
+.audio {
+    position: absolute;
+    margin-left: 90%;
+}
+
+.mute:hover {
+    cursor: pointer;
+}
+
+.play:hover {
+    cursor: pointer;
+}

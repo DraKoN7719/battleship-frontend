@@ -66,7 +66,7 @@ const LoadGame = () => {
                                                 isLoad: true
                                             }} className='loadGame-button-load'
                                                   onClick={() => loadGame(game.id)}>Загрузить</Link>
-                                            <img className='img' onClick={() => deleteSavedGame(game.id, game.gameName)}
+                                            <img className='delete_img' style={{marginLeft: "50px"}} onClick={() => deleteSavedGame(game.id, game.gameName)}
                                                  src={require("../styles/close.png")}/>
                                     </div>
                                 </td>

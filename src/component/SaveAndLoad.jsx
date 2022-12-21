@@ -74,7 +74,7 @@ const SaveAndLoad = ({placement, shipList, setCoordinates}) => {
     return (
         <div >
             <div className='save'>
-                <input id='nameSave' placeholder='Название расстановки'
+                <input id='nameSave' maxLength={25} placeholder='Название расстановки'
                        style={{borderRadius: '20px', width: '280px', marginLeft: 'auto', paddingLeft: '18px', fontSize: '20px'}}
                        onChange={(e) => setNameSave(e.target.value)}/>
                 {(shipList.filter(x => x.count === 0)).length  === 4 ? <button onClick={(e) => savePlacement(e)}
@@ -84,7 +84,7 @@ const SaveAndLoad = ({placement, shipList, setCoordinates}) => {
                             style={{marginLeft: 'auto'}}>Сохранить</button>
                 }
             </div>
-            <button className='load saveAndLoad_button' onClick={() => setModalActive(true)}>Загрузить</button>
+            <button className='load saveAndLoad_button' style={{marginLeft: 'auto'}} onClick={() => setModalActive(true)}>Загрузить</button>
             <Modal active={modalActive} setActive={setModalActive} style={'modal__content_2'}>
                 {listPlacement && listPlacement.length > 0 ?
                     <div className="load-scroll-table">

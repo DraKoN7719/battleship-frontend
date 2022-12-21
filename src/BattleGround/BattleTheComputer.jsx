@@ -6,6 +6,7 @@ import {renderShipsBattleComp} from "../component/RenderShips";
 import axios from "axios";
 import {isDead, setArea, setDead} from "./componentBattle/DrawingBorders";
 import Timer from "./componentBattle/Timer";
+import Audio from "./componentBattle/Audio";
 
 const BattleTheComputer = () => {
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ const BattleTheComputer = () => {
 
     const [nameSave, setNameSave] = useState("");
     const [timer, setTimer] = useState(120);
-    const [startTimer, setStartTimer] = useState(true);
+    const [startTimer, setStartTimer] = useState(false);
 
     const [isLoad, setIsLoad] = useState(!!location.state.isLoad);
     const [arrow, setArrow] = useState(location.state.motion ? location.state.motion === idUser : true)
@@ -286,6 +287,7 @@ const BattleTheComputer = () => {
     return (
         <div>
             <Timer start={startTimer} timer={timer} setTimer={setTimer}/>
+            <Audio/>
             <div className='poleBattle'>
                 <div>
                     <PoleBattle numbers={numbers} letters={letters} isPolePlayer={true}/>
@@ -299,23 +301,21 @@ const BattleTheComputer = () => {
                                 motion={motion} isPolePlayer={false}/>
                     <label style={{display: 'flex', justifyContent: 'center', marginTop: '20px', fontSize: '20px'}}>Поле
                         противника {getNameBot()}</label>
-                    <div className='save'>
-                        <input id='nameSave' placeholder='Название сохранения'
-                               style={{
-                                   borderRadius: '20px',
-                                   width: '280px',
-                                   marginLeft: 'auto',
-                                   paddingLeft: '18px',
-                                   fontSize: '20px'
-                               }}
-                               onChange={(e) => setNameSave(e.target.value)}/>
-                        <button onClick={(e) => saveGame(e)}
-                                className='saveAndLoad_button'
-                                style={{marginLeft: 'auto'}}>Сохранить
-                        </button>
-                    </div>
                 </div>
-
+            </div>
+            <div className='save'>
+                <input id='nameSave' maxLength={25} placeholder='Название сохранения'
+                       style={{
+                           borderRadius: '20px',
+                           width: '280px',
+                           paddingLeft: '18px',
+                           fontSize: '20px'
+                       }}
+                       onChange={(e) => setNameSave(e.target.value)}/>
+                <button onClick={(e) => saveGame(e)}
+                        className='saveAndLoad_button'
+                        style={{marginLeft: "30px"}}>Сохранить
+                </button>
             </div>
         </div>
     );
