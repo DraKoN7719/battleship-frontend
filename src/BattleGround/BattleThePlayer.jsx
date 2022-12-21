@@ -11,6 +11,8 @@ import {setArea, setDead} from "./componentBattle/DrawingBorders";
 import axios from "axios";
 import Timer from "./componentBattle/Timer";
 import Audio from "./componentBattle/Audio";
+import useSound from 'use-sound';
+import boopSfx from './vistrel.mp3';
 
 let stompClient = null;
 const BattleThePlayer = () => {
@@ -20,6 +22,7 @@ const BattleThePlayer = () => {
     const location = useLocation()
     const dispatch = useDispatch()
     const navigate = useNavigate();
+    const [play] = useSound(boopSfx);
     const [polePlayer, setPolePlayer] = useState(() => {
         const polePlayer2 = location.state.coordinates;
         for (let i = 0; i < 10; i++)
@@ -41,6 +44,7 @@ const BattleThePlayer = () => {
         [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0],
     ]);
+    const [isAudio, setIsAudio] = useState(true);
     const [selectedSquare, setSelectedSquare] = useState() //координаты попадания
     const [isWaitPlayer, setIsWaitPlayer] = useState(false)
     const [startTimer, setStartTimer] = useState(false)
@@ -77,7 +81,7 @@ const BattleThePlayer = () => {
 
     useEffect(() => {
         //из-за афк убивает!!
-        if(selectedSquare && poleTheEnemy[selectedSquare.y][selectedSquare.x] === 0){
+        if(selectedSquare && poleTheEnemy[selectedSquare.y][selectedSquare.x] === 0) {
             userHit(selectedSquare.y, selectedSquare.x);
             setSelectedSquare(undefined);
         }
@@ -128,6 +132,9 @@ const BattleThePlayer = () => {
                     break;
                 }
                 case "ПОПАЛ": {
+                    if (isAudio) {
+                        play();
+                    }
                     if(idUser === game1.id) {
                         pole2[game1.x][game1.y] = 2;
                         setPoleTheEnemy(pole2);
@@ -266,7 +273,7 @@ const BattleThePlayer = () => {
     return (
         <div>
             <Timer start={startTimer} timer={timer} setTimer={setTimer}/>
-            <Audio/>
+            <Audio setAudio={setIsAudio}/>
             <Loader polePlayer={polePlayer} isWaitPlayer={isWaitPlayer}/>
             <div className='poleBattle'>
                     <div>
