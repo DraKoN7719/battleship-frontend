@@ -120,11 +120,19 @@ const BattleThePlayer = () => {
             "/user/" + params.id + "/game", onMessageReceived)
     }
 
+    const [listenerShot, setListenerShot] = useState(false)
+
+    useEffect(() => {
+        if (listenerShot && isAudio) {
+            play();
+        }
+    }, [listenerShot])
+
+
     const onMessageReceived = (msg) => {
         let game1 = JSON.parse(msg.body)
         const pole1 = polePlayer.slice();
         const pole2 = poleTheEnemy.slice();
-        console.log(game1.status);
             switch (game1.status) {
                 case "JOIN_PLAYER_2": {
                     setIsWaitPlayer(false);
@@ -132,9 +140,7 @@ const BattleThePlayer = () => {
                     break;
                 }
                 case "ПОПАЛ": {
-                    if (isAudio) {
-                        play();
-                    }
+                    setListenerShot(() => true)
                     if(idUser === game1.id) {
                         pole2[game1.x][game1.y] = 2;
                         setPoleTheEnemy(pole2);
@@ -150,6 +156,7 @@ const BattleThePlayer = () => {
                     break;
                 }
                 case "МИМО": {
+                    setListenerShot(() => true)
                     if(idUser === game1.id) {
                         pole2[game1.x][game1.y] = -1;
                         setPoleTheEnemy(pole2);
@@ -165,6 +172,7 @@ const BattleThePlayer = () => {
                     break;
                 }
                 case "УБИЛ": {
+                    setListenerShot(() => true)
                     if(idUser === game1.id) {
                         pole2[game1.x][game1.y] = 3;
                         setDead(pole2, game1.x, game1.y)
@@ -223,6 +231,7 @@ const BattleThePlayer = () => {
                     break;
                 }
             }
+        setListenerShot(() => false)
     };
     
     const send=()=>{
