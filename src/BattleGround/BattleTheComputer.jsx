@@ -10,15 +10,10 @@ import {isDead, setArea, setDead} from "./componentBattle/DrawingBorders";
 import Timer from "./componentBattle/Timer";
 import Audio from "./componentBattle/Audio";
 
-
-
-
 const BattleTheComputer = () => {
     const navigate = useNavigate();
     const location = useLocation()
-    const [play] = useSound(
-        boopSfx
-    );
+    const [play] = useSound(boopSfx);
 
     const idUser = JSON.parse(sessionStorage.getItem('user')).id;
     const bot = location.state.bot;
@@ -27,7 +22,8 @@ const BattleTheComputer = () => {
 
     const [nameSave, setNameSave] = useState("");
     const [timer, setTimer] = useState(120);
-    const [startTimer, setStartTimer] = useState(false);
+    const [startTimer, setStartTimer] = useState(true);
+    const [isAudio, setIsAudio] = useState(true);
 
     const [isLoad, setIsLoad] = useState(!!location.state.isLoad);
     const [arrow, setArrow] = useState(location.state.motion ? location.state.motion === idUser : true)
@@ -74,7 +70,9 @@ const BattleTheComputer = () => {
     }
 
     function send() {
-        play()
+        if (isAudio) {
+            play()
+        }
 
         axios.post(`http://${window.location.hostname}:8080/api/shoot`, {
             "gameId": id,
@@ -150,7 +148,9 @@ const BattleTheComputer = () => {
             if (!motion) {
                 getCompTurn();
             }
-            play()
+            if (isAudio) {
+                play()
+            }
             if (isCompWin(polePlayer2)) {
                 setMotion(false);
                 setWin(true);
@@ -183,7 +183,7 @@ const BattleTheComputer = () => {
             player1: idUser,
             player2: bot,
             result: win ? bot : idUser
-        }).then( () => navigate(`/`));
+        }).then(() => navigate(`/`));
     }
 
     useEffect(() => {
@@ -230,7 +230,7 @@ const BattleTheComputer = () => {
     }, [poleComputer]);
 
     useEffect(() => {
-        if(timer === 0) {
+        if (timer === 0) {
             setWin(true);
         }
     }, [timer])
@@ -288,16 +288,19 @@ const BattleTheComputer = () => {
 
     function getNameBot() {
         switch (bot) {
-            case 1: return "Лёгкий ИИ";
-            case 2: return "Средний ИИ";
-            case 3: return "Сложный ИИ";
+            case 1:
+                return "Лёгкий ИИ";
+            case 2:
+                return "Средний ИИ";
+            case 3:
+                return "Сложный ИИ";
         }
     }
 
     return (
         <div>
             <Timer start={startTimer} timer={timer} setTimer={setTimer}/>
-            <Audio/>
+            <Audio setAudio={setIsAudio}/>
             <div className='poleBattle'>
                 <div>
                     <PoleBattle numbers={numbers} letters={letters} isPolePlayer={true}/>
