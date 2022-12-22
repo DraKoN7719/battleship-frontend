@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import SockJS from "sockjs-client";
 import {over} from "stompjs";
 import Loader from "./componentBattle/Loader";
-import {joinUser} from "../Store/STOMPReducer";
+import {closeConnect_User, joinUser} from "../Store/STOMPReducer";
 import {setArea, setDead} from "./componentBattle/DrawingBorders";
 import axios from "axios";
 import Timer from "./componentBattle/Timer";
@@ -201,6 +201,7 @@ const BattleThePlayer = () => {
                         addHistoryGame()
                         setStartTimer(() => false)
                         alert("Вы победили");
+                        disconnect()
                         navigate("/")
                     }
                     else {
@@ -211,6 +212,7 @@ const BattleThePlayer = () => {
                         setMotion(() => false)
                         setStartTimer(() => false)
                         alert("Вы проиграли");
+                        disconnect()
                         navigate("/")
                     }
                     break;
@@ -220,12 +222,14 @@ const BattleThePlayer = () => {
                         addHistoryGame()
                         alert("Вы победили")
                         setStartTimer(false)
+                        disconnect()
                         navigate("/")
                     }
                     else {
                         addHistoryGame()
                         alert("Вы победили")
                         setStartTimer(false)
+                        disconnect()
                         navigate("/")
                     }
                     break;
@@ -284,6 +288,17 @@ const BattleThePlayer = () => {
             navigate(`/`);
         }
     }, [timer])
+
+    function disconnect() {
+        if (stompClient != null) {
+            stompClient.send("/app/game",{}, JSON.stringify({...game,
+                status: "DISCONNECTION"
+            }))
+            stompClient.disconnect();
+            dispatch(closeConnect_User())
+            console.log("Disconnected");
+        }
+    }
 
     return (
         <div>
