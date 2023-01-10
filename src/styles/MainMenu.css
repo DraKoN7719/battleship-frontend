@@ -74,12 +74,12 @@
 
 
 .modal__info__button {
+    font: 20px Arial;
     border-radius: 20px;
     text-decoration: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
     background: #D9D9D9;
     border: 3px solid #000000;
     margin-top: 30px;

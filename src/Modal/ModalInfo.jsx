@@ -26,7 +26,7 @@ const ModalInfo = ({modalActive, setModalActive}) => {
             <Modal active={modalActive} setActive={setModalActive} style={'modal_info_content'}>
                 <h1 style={{fontSize: "20px", display: "flex"}}>Справочная информация</h1>
                 <button className='modal__info__button' onClick={() => getRules()}>Правила</button>
-                <button className='modal__info__button' onClick={() => getApplication()}>О приложении</button>
+                <a className='modal__info__button' href='http://localhost:63342/battleship-frontend/src/help/help.html' target="_blank">О приложении</a>
                 <button className='modal__info__button' onClick={() => getDevelopers()}>О разработчиках</button>
             </Modal>
             <Modal active={modalRules} setActive={setModalRules} style={'modal_info_content_rules'}>
@@ -51,35 +51,6 @@ const ModalInfo = ({modalActive, setModalActive}) => {
                 однопалубный.
             </Modal>
             <Modal active={modalApplication} setActive={setModalApplication} style={'modal_info_content_application'}>
-                <h1 style={{fontSize: "20px", display: "flex", flexDirection: "column",
-                    alignItems: "center"}}>О приложении</h1>
-                Автоматизированная система «Игра «Морской бой».
-                <br/>
-                Система предназначена для игры по онлайну в классический
-                морской бой между двумя людьми или между компьютером и
-                человеком.
-                <br/>
-                Дополнительные возможности системы:
-                <br/>
-                - автоматическая расстановка кораблей:
-                <br/>
-                <ul style={{marginLeft: "25px"}}>
-                    <li>случайная;</li>
-                    <li>по стратегии половина поля;</li>
-                    <li>по стратегии берега;</li>
-                </ul>
-                - стратегия стрельбы:
-                <br/>
-                <ul style={{marginLeft: "25px"}}>
-                    <li>диагонали;</li>
-                    <li>шахматы;</li>
-                    <li>локатор;</li>
-                </ul>
-                - сохранение расстановки;
-                <br/>
-                - загрузка расстановки;
-                <br/>
-                - просмотр истории игр.
             </Modal>
             <Modal active={modalDevelopers} setActive={setModalDevelopers} style={'modal_info_content'}>
                 <h1 style={{fontSize: "20px", display: "flex", flexDirection: "column",
